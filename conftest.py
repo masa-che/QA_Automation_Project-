@@ -9,3 +9,4 @@ def driver():
     driver.maximize_window()                                        # открытие окна браузера на весь экран
     yield driver                                                    # работает тело теста
     driver.close()                                                  # "teardown"
+
