@@ -1,6 +1,6 @@
 import time
 
-from pages.elements_page import TextBoxPage
+from pages.elements_page import TextBoxPage, CheckBoxPage
 
 
 class TestElements:
@@ -16,3 +16,12 @@ class TestElements:
             assert current_address == output_cur_addr, "the current address doesn't match"
             assert permanent_address == output_per_addr, "the permanent_address doesn't match"
             time.sleep(15)
+
+    class TestCheckBox:
+        def test_check_box(self, driver):
+            check_box_page = CheckBoxPage(driver, 'https://demoqa.com/checkbox')
+            check_box_page.open()
+            check_box_page.open_full_list()          # нажимаем на кнопку открывающую весь список checkbox
+            check_box_page.click_random_checkbox()   # рандомный выбор checkbox елементов
+            time.sleep(5)
+

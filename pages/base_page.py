@@ -30,7 +30,7 @@ class BasePage:
         return wait(self.driver, timeout).until(EC.element_to_be_clickable(locator))
 
     def go_to_element(self, element):                                       # скролл к выбранному елементу
-        self.driver.execute_script("argument[0].scrollIntoView();", element)
+        self.driver.execute_script("arguments[0].scrollIntoView();", element)  # скрипт джавовый
 
 # DOM - Объектная Модель Документа (Document Object Model) – это программный интерфейс (API) для HTML и XML документов
 

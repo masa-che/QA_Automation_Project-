@@ -1,6 +1,7 @@
 from generator.generator import generated_person
-from locators.elements_page_locators import TextBoxPageLocators
+from locators.elements_page_locators import TextBoxPageLocators, CheckBoxPageLocators
 from pages.base_page import BasePage
+import random
 
 
 class TextBoxPage(BasePage):
@@ -28,4 +29,33 @@ class TextBoxPage(BasePage):
         current_address = self.element_is_present(self.locators.CREATED_CURRENT_ADDRESS).text.split(':')[1]
         permanent_address = self.element_is_present(self.locators.CREATED_PERMANENT_ADDRESS).text.split(':')[1]
         return full_name, email, current_address, permanent_address
+
+
+class CheckBoxPage(BasePage):
+    locators = CheckBoxPageLocators()
+
+    def open_full_list(self):                                             # в функции используются методы class BasePage
+        self.element_is_visible(self.locators.EXPAND_ALL_BUTTON).click()  # клик кнопки выбора всех елементов checkbox
+
+    def click_random_checkbox(self):
+        item_list = self.elements_are_visible(self.locators.ITEM_LIST)
+#       for i in item_list:                                               # for проходит по каждому из эл-ов ITEM_LIST
+#            print(i.text)                                                # проверка возврата (checkbox tree) елементов
+#            self.go_to_element(i)                                        # 'фокусировка' на каждом эл. ITEMS_LIST
+#            i.click()
+        count = 17                                                        # счётчик итераций
+        while count != 0:                                                 # пока счётчик не равен нулю то:
+            item = item_list[random.randint(1, 15)]                       # берём случайный элемент из списка ITEM_LIST
+            if count > 0:                                                 # если счётчик больше нуля
+                self.go_to_element(item)                                  # находим этот случайный элемент
+                item.click()                                              # и кликаем его
+                print(item.text)                                          # принтуем текст выбранного item (проверка)
+                count -= 1                                                # count минус один
+            else:                                                         # иначе, когда count будет не больше нуля
+                break                                                     # выход из цикла
+
+
+
+
+
 
