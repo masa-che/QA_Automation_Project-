@@ -21,7 +21,12 @@ class TestElements:
         def test_check_box(self, driver):
             check_box_page = CheckBoxPage(driver, 'https://demoqa.com/checkbox')
             check_box_page.open()
-            check_box_page.open_full_list()          # нажимаем на кнопку открывающую весь список checkbox
-            check_box_page.click_random_checkbox()   # рандомный выбор checkbox елементов
+            check_box_page.open_full_list()              # нажимаем на кнопку открывающую весь список checkbox
+            check_box_page.click_random_checkbox()       # рандомный выбор checkbox елементов
+            a = check_box_page.get_checked_checkboxes()  # возврат отмеченных рандомно чекбоксов (для проверки)
+            b = check_box_page.get_output_result()       # возврат списка отмеченных рандомно чекбоксов (для проверки)
+            # print(a)
+            # print(b)
+            assert a == b, "checkboxes haven't been selected"
             time.sleep(5)
 

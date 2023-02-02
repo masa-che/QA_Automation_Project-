@@ -49,13 +49,29 @@ class CheckBoxPage(BasePage):
             if count > 0:                                                 # если счётчик больше нуля
                 self.go_to_element(item)                                  # находим этот случайный элемент
                 item.click()                                              # и кликаем его
-                print(item.text)                                          # принтуем текст выбранного item (проверка)
+                # print(item.text)                                        # принтуем текст выбранного item (проверка)
                 count -= 1                                                # count минус один
             else:                                                         # иначе, когда count будет не больше нуля
                 break                                                     # выход из цикла
 
+    def get_checked_checkboxes(self):
+        checked_list = self.elements_are_present(self.locators.CHECKED_ITEMS)  # список отм елементов CHECKED_ITEMS
+        data = []                                                              # буфер в который будут записаны данные
+        for box in checked_list:                                               # все отмеченные элементы из checked_list
+            title_item = box.find_element("xpath", self.locators.TITLE_ITEM)   # отбираются по xpath TITLE_ITEM
+            # print(title_item.text)                                           # принтуем для сравнения
+            data.append(title_item.text)                                       # add в data текст отмеченных checkboxes
+        return str(data).replace(' ', '').replace('.doc', '').lower()          # return отформатированный [список] data
 
+    def get_output_result(self):
+        result_list = self.elements_are_present(self.locators.OUTPUT_RESULT)   # список елементов OUTPUT_RESULT
+        data = []                                                              # буфер в который будут записаны данные
+        for item in result_list:                                               # все отмеченные элементы из result_list
+            # print(item.text)                                                 # принтуем для сравнения
+            data.append(item.text)                                             # add в data текст output checkboxes
+        return str(data).replace(' ', '').lower()                              # return отформатированный [список] data
 
-
+# str(data1).replace(' ', '').replace('.doc', '').lower()                      # строки из debug файла expecto_patronum
+# str(data2).replace(' ', '').lower()
 
 
