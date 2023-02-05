@@ -22,4 +22,13 @@ class CheckBoxPageLocators:
     ITEM_LIST = (By.CSS_SELECTOR, "span[class='rct-title']")                   # locator 17-ти элементов для работы с циклом
     CHECKED_ITEMS = (By.CSS_SELECTOR, "svg[class='rct-icon rct-icon-check']")  # поиск отмеченных чекбоксов
     TITLE_ITEM = ".//ancestor::span[@class='rct-text']"                        # xpath, путь к тексту элементов CHECKBOX
-    OUTPUT_RESULT = (By.CSS_SELECTOR, "span[class='text-success']")            # поиск выведенного списка назнаний, выбранных елементов в checkbox
+    OUTPUT_RESULT = (By.CSS_SELECTOR, "span[class='text-success']")            # поиск выведенного списка названий, выбранных елементов в checkbox
+
+
+class RadioButtonLocators:
+    RADIO_BUTTON_YES = (By.CSS_SELECTOR, "label[class^='custom-control'][for='yesRadio']")
+    RADIO_BUTTON_IMPRESSIVE = (By.CSS_SELECTOR, "label[class^='custom-control'][for='impressiveRadio']")
+    RADIO_BUTTON_NO = (By.CSS_SELECTOR, "label[class^='custom-control'][for='noRadio']")
+    OUTPUT_RESULT_RB = (By.CSS_SELECTOR, "span[class='text-success']")         # поиск текста, отмеченного radio_button
+
+
