@@ -32,3 +32,22 @@ class RadioButtonLocators:
     OUTPUT_RESULT_RB = (By.CSS_SELECTOR, "span[class='text-success']")         # поиск текста, отмеченного radio_button
 
 
+class WebTablePageLocators:
+    ADD_BUTTON = (By.CSS_SELECTOR, "button[id='addNewRecordButton']")          # кнопка add
+    FIRSTNAME_INPUT = (By.CSS_SELECTOR, "input[id='firstName']")               # firs name
+    LASTNAME_INPUT = (By.CSS_SELECTOR, "input[id='lastName']")                 # last name
+    AGE_INPUT = (By.CSS_SELECTOR, "input[id='age']")                           # age
+    EMAIL_INPUT = (By.CSS_SELECTOR, "input[id='userEmail']")                   # email
+    SALARY_INPUT = (By.CSS_SELECTOR, "input[id='salary']")                     # salary
+    DEPARTMENT_INPUT = (By.CSS_SELECTOR, "input[id='department']")             # department
+    SUBMIT = (By.CSS_SELECTOR, "button[id='submit']")                          # кнопка submit
+
+    # table
+    # список данных, добавленных пользователей (строка в таблице)
+    FULL_PERSON_LIST = (By.CSS_SELECTOR, "div[class='rt-tr-group']")
+
+    SEARCH_INPUT = (By.CSS_SELECTOR, 'input[id="searchBox"]')                  # поле для поиска пользователя в таблице
+    DELETE_BUTTON = (By.CSS_SELECTOR, 'span[title="Delete"]')                  # "корзинка" удаления данных в таблице
+    # поиск по родительскому элементу строки (xpath)
+    ROW_PARENT = ".//ancestor::div[@class='rt-tr-group']"                      # родительская строка в таблице WebTable
+

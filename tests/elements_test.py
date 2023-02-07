@@ -1,6 +1,7 @@
 import time
+import random
 
-from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage
+from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablePage
 
 
 class TestElements:
@@ -44,3 +45,26 @@ class TestElements:
             assert output_impressive == 'Impressive', "'Impressive' haven't been selected"
             assert output_no == 'No', "'No' haven't been selected"
 
+    class TestWebTable:
+        def test_web_table_add_person(self, driver):
+            web_table_page = WebTablePage(driver, 'https://demoqa.com/webtables')
+            web_table_page.open()
+            new_person = web_table_page.add_new_person()
+            table_result = web_table_page.check_new_added_person()
+            print(new_person)
+            print(table_result)
+            assert new_person in table_result
+
+# ['Гурий', 'Гордеева', '31', 'nonna_15@example.net', '122251', 'Старшина']
+# ['Гурий', 'Гордеева', '31', 'nonna_15@example.net', '122251', 'Старшина']
+
+        def test_web_table_search_person(self, driver):
+            web_table_page = WebTablePage(driver, 'https://demoqa.com/webtables')
+            web_table_page.open()
+            # функция add_new_person возвращает список из шести элементов (firstname,lastname, age, salary...и тд)
+            some_item_person = web_table_page.add_new_person()[random.randint(0, 5)]  # берём случайный элемент списка
+            web_table_page.search_some_person(some_item_person)                       # поиск в таблице по случ элементу
+            table_result = web_table_page.check_search_person()
+            print(some_item_person)
+            print(table_result)
+            assert some_item_person in table_result, "person wasn't found in the WebTable"

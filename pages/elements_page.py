@@ -1,5 +1,6 @@
 from generator.generator import generated_person
-from locators.elements_page_locators import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonLocators
+from locators.elements_page_locators import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonLocators, \
+    WebTablePageLocators
 from pages.base_page import BasePage
 import random
 
@@ -56,7 +57,7 @@ class CheckBoxPage(BasePage):
 
     def get_checked_checkboxes(self):
         checked_list = self.elements_are_present(self.locators.CHECKED_ITEMS)  # список отм елементов CHECKED_ITEMS
-        data = []                                                              # буфер в который будут записаны данные
+        data = []                                                              # [list] в который будут записаны данные
         for box in checked_list:                                               # все отмеченные элементы из checked_list
             title_item = box.find_element("xpath", self.locators.TITLE_ITEM)   # отбираются по xpath TITLE_ITEM
             # print(title_item.text)                                           # принтуем для сравнения
@@ -65,7 +66,7 @@ class CheckBoxPage(BasePage):
 
     def get_output_result(self):
         result_list = self.elements_are_present(self.locators.OUTPUT_RESULT)   # список елементов OUTPUT_RESULT
-        data = []                                                              # буфер в который будут записаны данные
+        data = []                                                              # [list] в который будут записаны данные
         for item in result_list:                                               # все отмеченные элементы из result_list
             # print(item.text)                                                 # принтуем для сравнения
             data.append(item.text)                                             # add в data текст output checkboxes
@@ -88,3 +89,46 @@ class RadioButtonPage(BasePage):
     def get_output_result(self):
         # возвращает текст в поле вывода при нажатии на radio_button
         return self.element_is_present(self.locators.OUTPUT_RESULT_RB).text
+
+
+class WebTablePage(BasePage):
+    locators = WebTablePageLocators()
+
+    def add_new_person(self):
+        count = 1
+        while count != 0:
+            person_info = next(generated_person())                                      # итератор next берёт по одному значению для каждого поля WebTable
+            firstname = person_info.first_name
+            lastname = person_info.last_name
+            email = person_info.email
+            age = person_info.age
+            salary = person_info.salary
+            department = person_info.department
+            self.element_is_visible(self.locators.ADD_BUTTON).click()                   # нажатие на кнопку ADD
+            # поиск локатора и добавление в него значение переменной firstname (и т.д.) сгенерированной пакетом faker
+            self.element_is_visible(self.locators.FIRSTNAME_INPUT).send_keys(firstname)
+            self.element_is_visible(self.locators.LASTNAME_INPUT).send_keys(lastname)
+            self.element_is_visible(self.locators.EMAIL_INPUT).send_keys(email)
+            self.element_is_visible(self.locators.AGE_INPUT).send_keys(age)
+            self.element_is_visible(self.locators.SALARY_INPUT).send_keys(salary)
+            self.element_is_visible(self.locators.DEPARTMENT_INPUT).send_keys(department)
+            self.element_is_visible(self.locators.SUBMIT).click()                   # клик по кнопке Submit
+            count -= 1                                                              # после итерации счётчик уменьшается на единицу
+            # возвращаем список для сравнения с output функции check_new_added_person заменяя int на str
+        return [firstname, lastname, str(age), email, str(salary), department]
+
+    def check_new_added_person(self):                                               # def для проверки правильности добавления данных
+        person_list = self.elements_are_present(self.locators.FULL_PERSON_LIST)
+        data = []                                                                   # [list] в который будут записаны данные
+        for item in person_list:
+            data.append(item.text.splitlines())   # получаем отдельные списки отдельных строк таблицы WebTable([],[],[])
+        return data
+
+    def search_some_person(self, key_word):
+        self.element_is_visible(self.locators.SEARCH_INPUT).send_keys(key_word)     # key_word вписываем в строку поиска по таблице на странице WebTable
+
+    def check_search_person(self):
+        delete_button = self.element_is_present(self.locators.DELETE_BUTTON)        # поиск кнопки Delete в таблице для
+        row = delete_button.find_element("xpath", self.locators.ROW_PARENT)         # поиска родительской строки
+        # возвращаем текст из строк разбитых на списки
+        return row.text.splitlines()
