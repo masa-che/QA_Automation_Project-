@@ -50,4 +50,10 @@ class WebTablePageLocators:
     DELETE_BUTTON = (By.CSS_SELECTOR, 'span[title="Delete"]')                  # "корзинка" удаления данных в таблице
     # поиск по родительскому элементу строки (xpath)
     ROW_PARENT = ".//ancestor::div[@class='rt-tr-group']"                      # родительская строка в таблице WebTable
+    NO_ROWS_FOUND = (By.CSS_SELECTOR, 'div[class="rt-noData"]')                # локатор отсутствия строк в таблице
+    ROWS_DROP_BOX = (By.CSS_SELECTOR, 'select[aria-label="rows per page"]')    # drop_box с количеством строк
+
+    # update
+    UPDATE_BUTTON = (By.CSS_SELECTOR, "span[title='Edit']")                    # кнопка Edit "карандаш"
+
 

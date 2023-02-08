@@ -1,3 +1,5 @@
+from selenium.webdriver.common.by import By
+
 from generator.generator import generated_person
 from locators.elements_page_locators import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonLocators, \
     WebTablePageLocators
@@ -94,7 +96,7 @@ class RadioButtonPage(BasePage):
 class WebTablePage(BasePage):
     locators = WebTablePageLocators()
 
-    def add_new_person(self):
+    def add_new_person(self):                                                           # добавление нового пользователя
         count = 1
         while count != 0:
             person_info = next(generated_person())                                      # итератор next берёт по одному значению для каждого поля WebTable
@@ -124,11 +126,43 @@ class WebTablePage(BasePage):
             data.append(item.text.splitlines())   # получаем отдельные списки отдельных строк таблицы WebTable([],[],[])
         return data
 
-    def search_some_person(self, key_word):
+    def search_some_person(self, key_word):  # функция нахождения пользователя по key word (вводимого в поле поиска)
         self.element_is_visible(self.locators.SEARCH_INPUT).send_keys(key_word)     # key_word вписываем в строку поиска по таблице на странице WebTable
 
-    def check_search_person(self):
+    def check_search_person(self):     # функция нахождения строки в webtable по delete button
         delete_button = self.element_is_present(self.locators.DELETE_BUTTON)        # поиск кнопки Delete в таблице для
         row = delete_button.find_element("xpath", self.locators.ROW_PARENT)         # поиска родительской строки
-        # возвращаем текст из строк разбитых на списки
+        # возвращаем текст из строки таблицы webtable - списком (для проверки поиска одного списка в другом)
         return row.text.splitlines()
+
+    def update_person_info(self):      # функция обновления age у пользователя, и возврата значения age (для проверки)
+        person_info = next(generated_person())  # next берёт значение для переменной age путём генерации случ. числа
+        age = person_info.age
+        self.element_is_visible(self.locators.UPDATE_BUTTON).click()            # клик по "карандашу"
+        self.element_is_visible(self.locators.AGE_INPUT).clear()                # очистка поля age
+        self.element_is_visible(self.locators.AGE_INPUT).send_keys(age)         # замена данных в поле age
+        self.element_is_visible(self.locators.SUBMIT).click()                   # click по  кнопке Submit
+        return str(age)                                                         # возвращаем age для дальнейшей проверки
+
+    def delete_person(self):           # функция удаления строки с данными пользователя из таблицы webtable
+        self.element_is_visible(self.locators.DELETE_BUTTON).click()
+
+    def check_deleted_person(self):    # функция поиска локатора отсутствия строк и return текста "No rows found"
+        return self.element_is_present(self.locators.NO_ROWS_FOUND).text
+
+    def select_up_to_some_rose(self):  # функция выбора количества строк в таблице WebTable
+        count = [5, 10, 20, 25, 50, 100]  # счётчик количества строк
+        data = []                         # буфер для возврата данных
+        for i in count:
+            row_drop_box = self.element_is_visible(self.locators.ROWS_DROP_BOX)     # поиск drop_box
+            # используем go_to_element потому что нужен точный якорь локатора drop_box на странице
+            self.go_to_element(row_drop_box)
+            row_drop_box.click()          # кликаем на drop_box
+            # динамически меняем локатор при помощи редактирования строк (f)
+            self.element_is_visible((By.CSS_SELECTOR, f'option[value="{i}"]')).click()
+            data.append(self.check_count_rows())
+        return data
+
+    def check_count_rows(self):           # проверка количества строк и возврат длины(len)строк в числовом эквиваленте
+        list_rows = self.elements_are_present(self.locators.FULL_PERSON_LIST)
+        return len(list_rows)
