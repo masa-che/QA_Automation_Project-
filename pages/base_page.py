@@ -1,6 +1,7 @@
 
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver import ActionChains
 
 
 class BasePage:
@@ -34,3 +35,12 @@ class BasePage:
 
 # DOM - Объектная Модель Документа (Document Object Model) – это программный интерфейс (API) для HTML и XML документов
 
+    def action_double_click(self, element):
+        action = ActionChains(self.driver)   # библиотека действий с кликами мышки скролом и перетаскивать элементы etc
+        action.double_click(element)         # синтаксис, выбор двойного клика
+        action.perform()                     # синтаксис, выполнение действия
+
+    def action_right_click(self, element):
+        action = ActionChains(self.driver)  # библиотека действий с кликами мышки скролом и перетаскивать элементы etc
+        action.context_click(element)       # синтаксис, выбор клика правой кнопкой мыши
+        action.perform()                    # синтаксис, выполнение действия

@@ -1,7 +1,7 @@
 import time
 import random
 
-from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablePage
+from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablePage, ButtonsPage
 
 
 class TestElements:
@@ -86,7 +86,7 @@ class TestElements:
             email = web_table_page.add_new_person()[3]          # взятие "email"[3] в работу, у нового пользователя
             web_table_page.search_some_person(email)            # поиск нового пользователя, в таблице, по email
             web_table_page.delete_person()                      # удаление пользователя
-            no_rows = web_table_page.check_deleted_person()     # проверка удаления путём поиска ключевой фразы no_rows
+            no_rows = web_table_page.check_deleted_person()     # проверка удаления (поиск ключевой фразы no_rows)
             assert no_rows == "No rows found", " The user personal data hasn't been deleted "
 
         def test_web_table_change_count_row(self, driver):
@@ -94,4 +94,16 @@ class TestElements:
             web_table_page.open()
             count = web_table_page.select_up_to_some_rose()
             assert count == [5, 10, 20, 25, 50, 100], "The drop_box of rows in the table hasn't work properly"
+
+    class TestButtonsPage:
+        def test_different_click_buttons(self, driver):
+            button_page = ButtonsPage(driver, 'https://demoqa.com/buttons')
+            button_page.open()
+            double = button_page.click_on_different_button('double')
+            right = button_page.click_on_different_button('right')
+            click = button_page.click_on_different_button('click')
+            assert double == "You have done a double click", "The double click button wasn't pressed"
+            assert right == "You have done a right click", "The right click button wasn't pressed"
+            assert click == "You have done a dynamic click", "The dynamic click button wasn't pressed"
+
 

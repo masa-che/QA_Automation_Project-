@@ -57,3 +57,14 @@ class WebTablePageLocators:
     UPDATE_BUTTON = (By.CSS_SELECTOR, "span[title='Edit']")                    # кнопка Edit "карандаш"
 
 
+class ButtonsPageLocators:
+    DOUBLE_CLICK_BUTTON = (By.CSS_SELECTOR, "button[id='doubleClickBtn']")     # кнопка двойного клика
+    RIGHT_CLICK_BUTTON = (By.CSS_SELECTOR, "button[id='rightClickBtn']")       # кнопка правого клика
+    # click me кнопка с динамически id можно обойти по поиску 3го элемента доч.кл от род.кл ":nth-child(3n) button"
+    # или //div[3]/button - xpath
+    CLICK_ME_BUTTON = (By.CSS_SELECTOR, "div[class='mt-4']:nth-child(3) button")
+
+    # result click messages
+    RESULT_DOUBLE = (By.CSS_SELECTOR, "p[id='doubleClickMessage']")            # сообщение о нажатии кнопки
+    RESULT_RIGHT = (By.CSS_SELECTOR, "p[id='rightClickMessage']")              # сообщение о нажатии кнопки
+    RESULT_CLICK_ME = (By.CSS_SELECTOR, "p[id='dynamicClickMessage']")         # сообщение о нажатии кнопки
