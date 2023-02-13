@@ -44,3 +44,4 @@ class BasePage:
         action = ActionChains(self.driver)  # библиотека действий с кликами мышки скролом и перетаскивать элементы etc
         action.context_click(element)       # синтаксис, выбор клика правой кнопкой мыши
         action.perform()                    # синтаксис, выполнение действия
+

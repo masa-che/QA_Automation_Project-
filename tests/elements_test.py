@@ -1,7 +1,7 @@
 import time
 import random
 
-from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablePage, ButtonsPage
+from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablePage, ButtonsPage, LinksPage
 
 
 class TestElements:
@@ -106,4 +106,35 @@ class TestElements:
             assert right == "You have done a right click", "The right click button wasn't pressed"
             assert click == "You have done a dynamic click", "The dynamic click button wasn't pressed"
 
+    class TestLinksPage:
 
+        def test_working_link(self, driver):                    # тест рабочей линки и открытие новой вкладки
+            links_page = LinksPage(driver, 'https://demoqa.com/links')
+            links_page.open()
+            href_link, current_url = links_page.check_new_tab_home_link()
+            print(href_link, current_url)
+            assert href_link == current_url, "the link is broken or url is incorrect"
+
+        def test_broken_link(self, driver):                     # тест не рабочей линки с status_code 400
+            links_page = LinksPage(driver, 'https://demoqa.com/links')
+            links_page.open()
+            response_code = links_page.check_bad_link('https://demoqa.com/bad-request')
+            assert response_code == 400, "some thing wrong"     # 400-"Неверный запрос"
+
+        def test_unauthorized_link(self, driver):               # тест линки с status_code 401
+            links_page = LinksPage(driver, 'https://demoqa.com/links')
+            links_page.open()
+            response_code = links_page.check_unauthorized_link('https://demoqa.com/unauthorized')
+            assert response_code == 401, "some thing wrong"     # 401-"Неавторизованный"
+            print(response_code)
+
+# 201 - Created (Созданный)
+# 204 - No Content (Без контента)
+
+# 301 - Moved Permanently (перемещённый навсегда)
+
+# 402 - Payment Required (в данный момент не используется, может использовать в дальнейшем)
+# 403 - Forbidden (Запрещённый)
+# 404 - Not Found (страницы не существует)
+
+# 500 - Internal Server Error (ошибка на стороне сервера)

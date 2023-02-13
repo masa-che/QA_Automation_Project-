@@ -68,3 +68,11 @@ class ButtonsPageLocators:
     RESULT_DOUBLE = (By.CSS_SELECTOR, "p[id='doubleClickMessage']")            # сообщение о нажатии кнопки
     RESULT_RIGHT = (By.CSS_SELECTOR, "p[id='rightClickMessage']")              # сообщение о нажатии кнопки
     RESULT_CLICK_ME = (By.CSS_SELECTOR, "p[id='dynamicClickMessage']")         # сообщение о нажатии кнопки
+
+
+class LinksPageLocators:
+    HOME_LINK = (By.CSS_SELECTOR, "a[id='simpleLink']")                        # "Home" link
+    BAD_REQUEST = (By.CSS_SELECTOR, "a[id='bad-request']")                     # "Bad Request" link
+    UNAUTHORIZED = (By.CSS_SELECTOR, "a[id='unauthorized']")                   # "Unauthorized" link
+
+

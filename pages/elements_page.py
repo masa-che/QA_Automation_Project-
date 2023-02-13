@@ -1,8 +1,9 @@
+import requests
 from selenium.webdriver.common.by import By
 
 from generator.generator import generated_person
 from locators.elements_page_locators import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonLocators, \
-    WebTablePageLocators, ButtonsPageLocators
+    WebTablePageLocators, ButtonsPageLocators, LinksPageLocators
 from pages.base_page import BasePage
 import random
 
@@ -190,3 +191,37 @@ class ButtonsPage(BasePage):
     # возвращает необходимый нам - текст локаторов, для assert в тесте
     def check_clicked_on_the_button(self, element):
         return self.element_is_present(element).text
+
+
+class LinksPage(BasePage):
+    locators = LinksPageLocators()
+
+    def check_new_tab_home_link(self):     # открытие по ссылке новой вкладки и return "локаторной" ссылки и current_url
+        home_link = self.element_is_visible(self.locators.HOME_LINK)
+        link_href = home_link.get_attribute('href')  # get_attribute возвращает значение указанного атрибута элемента
+        request = requests.get(link_href)  # href указывает ссылку: либо URL, либо якорь (ссылки хранятся в href)
+        if request.status_code == 200:
+            home_link.click()              # если ссылка статус 200 кликаем по ней
+            # через driver переключаемся (switch) на вторую вкладку (handle[1])
+            self.driver.switch_to.window(self.driver.window_handles[1])
+            # в url кладём current_url для того чтобы сравнить та ли ссылка открылась через href
+            url = self.driver.current_url  # current_url действующий url на открытой вкладке (new_tab)
+            return link_href, url
+        else:
+            return link_href, request.status_code   # возврат линки и статус кода (если request.status_code != 200)
+
+    def check_bad_link(self, url):                  # url из самого теста с (bad-request)
+        request = requests.get(url)
+        if request.status_code == 200:              # условие в if не отработает (ссылка с другим статус кодом)
+            self.element_is_present(self.locators.BAD_REQUEST).click()
+        else:
+            return request.status_code              # условие else выполнится и вернёт статус код поломанной ссылки
+
+    def check_unauthorized_link(self, url):
+        request = requests.get(url)
+        if request.status_code == 200:
+            self.element_is_present(self.locators.UNAUTHORIZED).click()
+        else:
+            return request.status_code
+
+
