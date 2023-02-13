@@ -1,7 +1,8 @@
 import time
 import random
 
-from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablePage, ButtonsPage, LinksPage
+from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablePage, ButtonsPage, LinksPage, \
+    UpLoadAndDownloadPage
 
 
 class TestElements:
@@ -138,3 +139,17 @@ class TestElements:
 # 404 - Not Found (страницы не существует)
 
 # 500 - Internal Server Error (ошибка на стороне сервера)
+
+    class TestUpLoadAndDownload:
+
+        def test_upload_file(self, driver):
+            upload_download_page = UpLoadAndDownloadPage(driver, 'https://demoqa.com/upload-download')
+            upload_download_page.open()
+            file_name, result = upload_download_page.upload_file()
+            assert file_name == result, "the file hasn't been uploaded"
+
+        def test_download_file(self, driver):
+            upload_download_page = UpLoadAndDownloadPage(driver, 'https://demoqa.com/upload-download')
+            upload_download_page.open()
+            check = upload_download_page.download_file()             # down_load возвращает path к файлу
+            assert check is True, "the file hasn't been downloaded"  # путь существует, если нет, то файл не был скачан

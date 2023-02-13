@@ -76,3 +76,8 @@ class LinksPageLocators:
     UNAUTHORIZED = (By.CSS_SELECTOR, "a[id='unauthorized']")                   # "Unauthorized" link
 
 
+class UpLoadAndDownloadPageLocators:
+    INPUT_UPLOAD_FILE = (By.CSS_SELECTOR, "input[id='uploadFile']")                  # input для загрузки файла
+    UPLOADED_FILE_RESULT = (By.CSS_SELECTOR, "p[id='uploadedFilePath']")             # строка с path на web
+
+    DOWNLOAD_FILE = (By.CSS_SELECTOR, "a[id='downloadButton']")                      # кнопка Download

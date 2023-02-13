@@ -1,9 +1,13 @@
+import base64
+
 import requests
+import time
+import os
 from selenium.webdriver.common.by import By
 
-from generator.generator import generated_person
+from generator.generator import generated_person, generated_file
 from locators.elements_page_locators import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonLocators, \
-    WebTablePageLocators, ButtonsPageLocators, LinksPageLocators
+    WebTablePageLocators, ButtonsPageLocators, LinksPageLocators, UpLoadAndDownloadPageLocators
 from pages.base_page import BasePage
 import random
 
@@ -225,3 +229,32 @@ class LinksPage(BasePage):
             return request.status_code
 
 
+class UpLoadAndDownloadPage(BasePage):
+    locators = UpLoadAndDownloadPageLocators()
+
+    def upload_file(self):                       # функция авто-загрузки файла (создание файла, написано в generator.py)
+        file_name, path = generated_file()       # from generator.generator.py import generated_file() (не забыть)
+        # указываем путь(path) к файлу в сам input
+        self.element_is_present(self.locators.INPUT_UPLOAD_FILE).send_keys(path)
+        os.remove(path)                          # модуль os, remove - удалит наш файл
+        # достанем текст wed при загрузке файла
+        text = self.element_is_present(self.locators.UPLOADED_FILE_RESULT).text
+        return file_name.split('\\')[-1], text.split('\\')[-1]
+
+    def download_file(self):                        # функция для авто-загрузки файла
+        # get_attribute возвращает значение указанного атрибута элемента (т.е. линку на файл картинки,
+        # в котором зашифровано само изображение)
+        link = self.element_is_present(self.locators.DOWNLOAD_FILE).get_attribute('href')
+        # print(link)
+        link_b = base64.b64decode(link)             # расшифровка побитно линки с кодом изображения
+        # путь к файлу r- "сырая строка" обход экранирования (чтобы не ругалось на бэкслеш) и f- для редактирования
+        path_file = rf'c:\Users\Максим\PycharmProjects\QA_Automation_Project-\filetest{random.randint(0, 101)}.jpg'
+        # конструкция 'with as' - работает как менеджер создания контекста f: (работа с файлом) w - запись в файл
+        # b - открывается как двоичный файл, + - режим чтения и записи
+        with open(path_file, 'wb+') as f:
+            offset = link_b.find(b'\xff\xd8')       # b-бинарник'\xff\xd8'- начальная точка поиска битового кода файла
+            f.write(link_b[offset:])                # write в файл path_file всю кодировку начиная с offset и до конца
+            check_file = os.path.exists(path_file)  # проверка записи файла, путь - path_file
+            f.close()                               # закрытие файла
+        os.remove(path_file)
+        return check_file
