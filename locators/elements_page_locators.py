@@ -77,7 +77,14 @@ class LinksPageLocators:
 
 
 class UpLoadAndDownloadPageLocators:
-    INPUT_UPLOAD_FILE = (By.CSS_SELECTOR, "input[id='uploadFile']")                  # input для загрузки файла
-    UPLOADED_FILE_RESULT = (By.CSS_SELECTOR, "p[id='uploadedFilePath']")             # строка с path на web
+    INPUT_UPLOAD_FILE = (By.CSS_SELECTOR, "input[id='uploadFile']")            # input для загрузки файла
+    UPLOADED_FILE_RESULT = (By.CSS_SELECTOR, "p[id='uploadedFilePath']")       # строка с path на web
 
-    DOWNLOAD_FILE = (By.CSS_SELECTOR, "a[id='downloadButton']")                      # кнопка Download
+    DOWNLOAD_FILE = (By.CSS_SELECTOR, "a[id='downloadButton']")                # кнопка Download
+
+
+class DynamicPropertiesPageLocators:
+    COLOR_CHANGE_BUTTON = (By.CSS_SELECTOR, "button[id='colorChange']")        # кнопка с изменяемым цветом Color Change
+    VISIBLE_AFTER_5S_BUTTON = (By.CSS_SELECTOR, "button[id='visibleAfter']")   # кнопка видимая через 5 сек
+    ENABLE_BUTTON = (By.CSS_SELECTOR, "button[id='enableAfter']")              # disable button, after 5s - enable
+

@@ -1,15 +1,17 @@
 import base64
-
 import requests
 import time
 import os
-from selenium.webdriver.common.by import By
+import random
 
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import TimeoutException
 from generator.generator import generated_person, generated_file
 from locators.elements_page_locators import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonLocators, \
-    WebTablePageLocators, ButtonsPageLocators, LinksPageLocators, UpLoadAndDownloadPageLocators
+    WebTablePageLocators, ButtonsPageLocators, LinksPageLocators, UpLoadAndDownloadPageLocators, \
+    DynamicPropertiesPageLocators
 from pages.base_page import BasePage
-import random
+
 
 
 class TextBoxPage(BasePage):
@@ -258,3 +260,29 @@ class UpLoadAndDownloadPage(BasePage):
             f.close()                               # закрытие файла
         os.remove(path_file)
         return check_file
+
+
+class DynamicPropertiesPage(BasePage):
+    locators = DynamicPropertiesPageLocators()
+
+    def check_changed_color(self):                  # возвращает цвета кнопки, до и после timeout web
+        color_button = self.element_is_present(self.locators.COLOR_CHANGE_BUTTON)
+        # метод value_of_css_property('color')  вернёт значение цвета (rgba)
+        color_button_before = color_button.value_of_css_property('color')
+        time.sleep(5)
+        color_button_after = color_button.value_of_css_property('color')
+        return color_button_before, color_button_after
+
+    def check_appear_button(self):                  # проверка появления кнопки, после timeout web
+        try:
+            self.element_is_present(self.locators.VISIBLE_AFTER_5S_BUTTON)
+        except TimeoutException:
+            return False
+        return True
+
+    def check_enable_button(self):
+        try:
+            self.element_is_clickable(self.locators.ENABLE_BUTTON)
+        except TimeoutException:
+            return False
+        return True
