@@ -156,7 +156,7 @@ class TestElements:
 
     class TestDynamicPropertiesPage:
 
-        def test_dynamic_properties(self, driver):                   # тест динамических свойств кнопки
+        def test_dynamic_properties(self, driver):                   # тест динамических свойств кнопки(изменение цвета)
             dynamic_properties_page = DynamicPropertiesPage(driver, 'https://demoqa.com/dynamic-properties')
             dynamic_properties_page.open()
             color_before, color_after = dynamic_properties_page.check_changed_color()

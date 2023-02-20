@@ -45,3 +45,8 @@ class BasePage:
         action.context_click(element)       # синтаксис, выбор клика правой кнопкой мыши
         action.perform()                    # синтаксис, выполнение действия
 
+    def remove_footer(self):
+        # удаление по тегу - футера страницы (перекрывает кнопку "Submit", по факту это баг)
+        self.driver.execute_script("document.getElementsByTagName('footer')[0].remove();")
+        # удаление по id - кнопки в футере страницы
+        # self.driver.execute_script("document.getElementsById('close-fixedban').remove();")
