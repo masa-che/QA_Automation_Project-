@@ -13,7 +13,7 @@ class TestAlertsFramesWindows:
         def test_new_window(self, driver):
             new_window_page = BrowserWindowsPage(driver, 'https://demoqa.com/browser-windows')
             new_window_page.open()
-            text_result = new_window_page.check_opened_new_tab()
+            text_result = new_window_page.check_opened_new_window()
             assert text_result == "This is a sample page", "the new window hasn't opened or an incorrect window has " \
                                                            "opened"
 
