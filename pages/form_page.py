@@ -1,4 +1,6 @@
 import os
+# import pyautogui
+
 
 from generator.generator import generated_person, generated_file, generated_subject
 from locators.form_page_locators import FormPageLocators
@@ -21,11 +23,16 @@ class FormPage(BasePage):
         self.element_is_visible(self.locators.EMAIL).send_keys(person.email)
         self.element_is_visible(self.locators.GENDER).click()
         self.element_is_visible(self.locators.MOBILE).send_keys(person.mobile)
+        # self.element_is_visible(self.locators.DATE_OF_BIRTH).click()
+        # self.element_is_visible(self.locators.DATE_OF_BIRTH).send_keys(Keys.CONTROL + "a")
+        # self.element_is_visible(self.locators.DATE_OF_BIRTH).send_keys(Keys.BACKSPACE)
+        # self.element_is_visible(self.locators.DATE_OF_BIRTH).send_keys('12 Oct 1998')
+        # self.element_is_visible(self.locators.DATE_OF_BIRTH).send_keys(Keys.RETURN)
         self.element_is_visible(self.locators.SUBJECT).send_keys(subject)
         self.element_is_visible(self.locators.SUBJECT).send_keys(Keys.RETURN)
         self.element_is_visible(self.locators.HOBBIES).click()
         self.element_is_present(self.locators.FILE_INPUT).send_keys(path)
-        os.remove(path)
+        os.remove(file_name)
         self.element_is_visible(self.locators.CURRENT_ADDRESS).send_keys(person.current_address)
         # находим в DOM SELECT_STATE, смотрим что он is present, потом шагаем к елементу на web (go_to_element)
         self.go_to_element(self.element_is_present(self.locators.SELECT_STATE))
