@@ -8,5 +8,6 @@ def driver():
     driver = webdriver.Chrome(ChromeDriverManager().install())      # запуск браузера chrome "setup"
     driver.maximize_window()                                        # открытие окна браузера на весь экран
     yield driver                                                    # работает тело теста
-    driver.close()                                                  # "teardown"
+    driver.quit()                                                   # "teardown"
+
 
