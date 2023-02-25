@@ -2,7 +2,7 @@ import time
 import random
 
 from pages.base_page import BasePage
-from locators.alerts_frames_windows_locators import BrowserWindowsPageLocators, AlertsPageLocators
+from locators.alerts_frames_windows_locators import BrowserWindowsPageLocators, AlertsPageLocators, FramesPageLocators
 
 
 class BrowserWindowsPage(BasePage):
@@ -60,6 +60,33 @@ class AlertsPage(BasePage):
         # забираем текст локатора PROMPT_RESULT
         text_result = self.element_is_present(self.locators.PROMPT_RESULT).text
         return text_in_field, text_result
+
+
+class FramesPage(BasePage):
+    locators = FramesPageLocators()
+
+    def check_frames(self, frame_num):                                  # метод проверки frames (рамочек-остовов)
+        if frame_num == "frame_big":                                    # "если" - 'frame_big' то
+            frame = self.element_is_present(self.locators.BIG_FRAME)    # находим на web frame_big по селектору
+            width = frame.get_attribute('width')                        # забираем ширину и высоту
+            height = frame.get_attribute('height')
+            self.driver.switch_to.frame(frame)                          # по локатору переключаемся на сам 'frame_big'
+            text = self.element_is_present(self.locators.FRAME_TITLE).text  # забираем текст внутри frame
+            self.driver.switch_to.default_content()                     # переключаемся на основную страницу web
+            return [text, width, height]
+        if frame_num == "frame_small":                                  # "если" - 'frame_small' то
+            frame = self.element_is_present(self.locators.SMALL_FRAME)  # находим на web frame_small по селектору
+            width = frame.get_attribute('width')                        # забираем ширину и высоту
+            height = frame.get_attribute('height')
+            self.driver.switch_to.frame(frame)                          # по локатору переключаемся на сам 'frame_small'
+            text = self.element_is_present(self.locators.FRAME_TITLE).text  # забираем текст внутри frame
+            self.driver.switch_to.default_content()                     # переключение на основную страницу web
+            return [text, width, height]
+
+
+
+
+
 
 
 
