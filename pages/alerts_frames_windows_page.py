@@ -2,7 +2,8 @@ import time
 import random
 
 from pages.base_page import BasePage
-from locators.alerts_frames_windows_locators import BrowserWindowsPageLocators, AlertsPageLocators, FramesPageLocators
+from locators.alerts_frames_windows_locators import BrowserWindowsPageLocators, AlertsPageLocators, FramesPageLocators, \
+    NestedFramesPageLocators, ModalDialogsPageLocators
 
 
 class BrowserWindowsPage(BasePage):
@@ -51,12 +52,12 @@ class AlertsPage(BasePage):
         text_result = self.element_is_present(self.locators.CONFIRM_RESULT).text
         return text_result
 
-    def check_prompt_alert(self):                                   # метод переключения на alert - ввод текста - "Ok"
+    def check_prompt_alert(self):                                    # метод переключения на alert - ввод текста - "Ok"
         text_in_field = f"Hello World{random.randint(0, 101)}"
         self.element_is_visible(self.locators.PROMPT_ALERT_BUTTON).click()
         alert_window = self.driver.switch_to.alert
         alert_window.send_keys(text_in_field)
-        alert_window.accept()                                       # click "ok" in alert window
+        alert_window.accept()                                        # click "ok" in alert window
         # забираем текст локатора PROMPT_RESULT
         text_result = self.element_is_present(self.locators.PROMPT_RESULT).text
         return text_in_field, text_result
@@ -84,7 +85,35 @@ class FramesPage(BasePage):
             return [text, width, height]
 
 
+class NestedFramesPage(BasePage):
+    locators = NestedFramesPageLocators()
 
+    def check_nested_frame(self):                                      # метод проверки вложенной рамки (frame)
+        parent_frame = self.element_is_present(self.locators.PARENT_FRAME)
+        self.driver.switch_to.frame(parent_frame)                      # переключаемся на parent_frame
+        parent_text = self.element_is_present(self.locators.PARENT_TEXT).text   # забираем текст внутри рамки
+        child_frame = self.element_is_present(self.locators.CHILD_FRAME)
+        self.driver.switch_to.frame(child_frame)                       # переключаемся на child_frame
+        child_text = self.element_is_present(self.locators.CHILD_TEXT).text     # забираем текст внутри рамки
+        return parent_text, child_text
+
+
+class ModalDialogsPage(BasePage):
+    locators = ModalDialogsPageLocators()
+
+    def check_small_modal_dialog(self):
+        self.element_is_visible(self.locators.SMALL_MODAL_BUTTON).click()
+        title_small = self.element_is_visible(self.locators.SMALL_MODAL_TITLE).text
+        body_small = self.element_is_visible(self.locators.SMALL_MODAL_BODY).text
+        self.element_is_visible(self.locators.SMALL_MODAL_CLOSE_BUTTON).click()
+        return [title_small, len(body_small)]
+
+    def check_large_modal_dialog(self):
+        self.element_is_visible(self.locators.LARGE_MODAL_BUTTON).click()
+        title_large = self.element_is_visible(self.locators.LARGE_MODAL_TITLE).text
+        body_large = self.element_is_visible(self.locators.LARGE_MODAL_BODY).text
+        self.element_is_visible(self.locators.LARGE_MODAL_CLOSE_BUTTON).click()
+        return [title_large, len(body_large)]
 
 
 
