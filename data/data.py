@@ -15,3 +15,9 @@ class Person:
     mobile: str = None
 
 # в датаклассах необходимо СТРОГО прописывать тип данных для свойств (данных) класса
+
+
+@dataclass
+class Color:
+    color_name: list = None
+
