@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 
+# alt  + click lbm
 @dataclass                       # функция декоратор позволяющий хранить в классе данные с определённым типом
 class Person:
     full_name: str = None
@@ -20,4 +21,12 @@ class Person:
 @dataclass
 class Color:
     color_name: list = None
+
+
+@dataclass
+class Date:
+    day: str = None
+    month: str = None
+    year: str = None
+    time: str = None
 

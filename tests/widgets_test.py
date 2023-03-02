@@ -1,4 +1,4 @@
-from pages.widgets_page import AccordionPage, AutoCompletePege
+from pages.widgets_page import AccordionPage, AutoCompletePege, DatePickerPage
 import time
 
 
@@ -25,7 +25,7 @@ class TestWidgets:
             colors_result = autocomplete_page.check_color_in_multi()
             print(colors)
             print(colors_result)
-            assert colors == colors_result, 'the added colors are missing in the input'
+            assert colors == colors_result, "the added colors are missing in the input"
 
         def test_remove_value_multi_autocomplete(self, driver):
             autocomplete_page = AutoCompletePege(driver, 'https://demoqa.com/auto-complete')
@@ -43,5 +43,22 @@ class TestWidgets:
             color_result = autocomplete_page.check_color_in_single()
             print(color)
             print(color_result)
-            assert color == color_result, 'the added color is missing in the input'
+            assert color == color_result, "the added color is missing in the input"
 
+    class TestDatePickerPage:
+
+        def test_change_date(self, driver):
+            date_picker_page = DatePickerPage(driver, 'https://demoqa.com/date-picker')
+            date_picker_page.open()
+            value_date_before, value_date_after = date_picker_page.select_date()
+            print(value_date_before)
+            print(value_date_after)
+            assert value_date_before != value_date_after, "the date hasn't been changed"
+
+        def test_change_date_and_time(self, driver):
+            date_picker_page = DatePickerPage(driver, 'https://demoqa.com/date-picker')
+            date_picker_page.open()
+            value_date_before, value_date_after = date_picker_page.select_date_and_time()
+            print(value_date_before)
+            print(value_date_after)
+            assert value_date_before != value_date_after, "the date or time have not been changed"
