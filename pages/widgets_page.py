@@ -1,5 +1,5 @@
 from locators.widgets_page_locators import AccordionPageLocators, AutoCompletePegeLocators, DatePickerPageLocators, \
-    SliderPageLocators, ProgressBarPageLocators
+    SliderPageLocators, ProgressBarPageLocators, TabsPageLocators
 from selenium.webdriver.common.keys import Keys
 from pages.base_page import BasePage
 from generator.generator import generated_color, generated_date
@@ -13,6 +13,7 @@ import time
 class AccordionPage(BasePage):
     locators = AccordionPageLocators()
 
+    # метод прохода по всем вкладкам accordion widget и возврат текста заголовков, длин текс-контента
     def check_accordion(self, accordion_num):
         accordion = {'first': {'title': self.locators.SECTION_FIRST,
                                'content': self.locators.SECTION_CONTENT_FIRST},
@@ -149,6 +150,29 @@ class ProgressBarPage(BasePage):
         return value_before, value_after
 
 
+class TabsPage(BasePage):
+    locators = TabsPageLocators()
+
+    def check_tabs(self, tab_name):
+
+        tabs = {'what':
+                    {'title': self.locators.TABS_WHAT,
+                     'content': self.locators.TABS_WHAT_CONTENT},
+                'origin':
+                    {'title': self.locators.TABS_ORIGIN,
+                     'content': self.locators.TABS_ORIGIN_CONTENT},
+                'use':
+                    {'title': self.locators.TABS_USE,
+                     'content': self.locators.TABS_USE_CONTENT},
+                'more':
+                    {'title': self.locators.TABS_MORE,
+                     'content': self.locators.TABS_MORE_CONTENT}
+                }
+
+        button_name = self.element_is_visible(tabs[tab_name]['title'])
+        button_name.click()
+        text_content = self.element_is_visible(tabs[tab_name]['content']).text
+        return button_name.text, len(text_content)
 
 
 
