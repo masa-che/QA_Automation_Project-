@@ -1,4 +1,5 @@
-from locators.widgets_page_locators import AccordionPageLocators, AutoCompletePegeLocators, DatePickerPageLocators
+from locators.widgets_page_locators import AccordionPageLocators, AutoCompletePegeLocators, DatePickerPageLocators, \
+    SliderPageLocators, ProgressBarPageLocators
 from selenium.webdriver.common.keys import Keys
 from pages.base_page import BasePage
 from generator.generator import generated_color, generated_date
@@ -119,6 +120,33 @@ class DatePickerPage(BasePage):
         input_date_after = self.element_is_visible(self.locators.DATE_AND_TIME_INPUT)
         value_date_after = input_date_after.get_attribute('value')
         return value_date_before, value_date_after
+
+
+class SliderPage(BasePage):
+    locators = SliderPageLocators()
+
+    def change_slider_value(self):
+        value_before = self.element_is_visible(self.locators.SLIDER_VALUE).get_attribute('value')
+        slider_input = self.element_is_visible(self.locators.INPUT_SLIDER)
+        # изменяем положение слайдера (библиотека action-chains, метод описан в BasePage)
+        self.action_drag_and_drop_by_offset(slider_input, random.randint(1, 100), 0)
+        value_after = self.element_is_visible(self.locators.SLIDER_VALUE).get_attribute('value')
+        # при помощи get_attribute, return-ом возвращаем значения 'value' на web селектора SLIDER_VALUE, до и после
+        # манипуляций со слайдером
+        return value_before, value_after
+
+
+class ProgressBarPage(BasePage):
+    locators = ProgressBarPageLocators()
+
+    def change_progress_bar_value(self):
+        value_before = self.element_is_present(self.locators.PROGRES_BAR_VALUE).text
+        progress_bar_button = self.element_is_present(self.locators.PROGRESS_BAR_BUTTON)
+        progress_bar_button.click()
+        time.sleep(random.randint(2, 6))
+        progress_bar_button.click()
+        value_after = self.element_is_present(self.locators.PROGRES_BAR_VALUE).text
+        return value_before, value_after
 
 
 

@@ -36,15 +36,20 @@ class BasePage:
 
 # DOM - Объектная Модель Документа (Document Object Model) – это программный интерфейс (API) для HTML и XML документов
 
-    def action_double_click(self, element):
+    def action_double_click(self, element):                                 # двойное нажатие lbm
         action = ActionChains(self.driver)   # библиотека действий с кликами мышки скролом и перетаскивать элементы etc
-        action.double_click(element)         # синтаксис, выбор двойного клика
+        action.double_click(element)         # синтаксис, выбор двойного клика левой кнопки мыши
         action.perform()                     # синтаксис, выполнение действия
 
-    def action_right_click(self, element):
+    def action_right_click(self, element):                                  # клик rbm
         action = ActionChains(self.driver)  # библиотека действий с кликами мышки скролом и перетаскивать элементы etc
         action.context_click(element)       # синтаксис, выбор клика правой кнопкой мыши
         action.perform()                    # синтаксис, выполнение действия
+
+    def action_drag_and_drop_by_offset(self, element, x_coord, y_coord):    # перетягивание слайдера по координатам
+        action = ActionChains(self.driver)
+        action.drag_and_drop_by_offset(element, x_coord, y_coord)
+        action.perform()
 
     def remove_footer(self):
         # удаление по тегу - футера страницы (перекрывает кнопку "Submit", по факту это баг)
