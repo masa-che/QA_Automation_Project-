@@ -42,14 +42,19 @@ class BasePage:
         action.perform()                     # синтаксис, выполнение действия
 
     def action_right_click(self, element):                                  # клик rbm
-        action = ActionChains(self.driver)  # библиотека действий с кликами мышки скролом и перетаскивать элементы etc
-        action.context_click(element)       # синтаксис, выбор клика правой кнопкой мыши
-        action.perform()                    # синтаксис, выполнение действия
+        action = ActionChains(self.driver)   # библиотека действий с кликами мышки скролом и перетаскивать элементы etc
+        action.context_click(element)        # синтаксис, выбор клика правой кнопкой мыши
+        action.perform()                     # синтаксис, выполнение действия
 
     def action_drag_and_drop_by_offset(self, element, x_coord, y_coord):    # перетягивание слайдера по координатам
         action = ActionChains(self.driver)
         action.drag_and_drop_by_offset(element, x_coord, y_coord)
         action.perform()
+
+    def action_move_to_element(self, element):                              # перемещение курсора мышки на элемент
+        action = ActionChains(self.driver)   # библиотека действий с мышкой (скролл, клик, наведение на элемент etc)
+        action.move_to_element(element)      # синтаксис, наведение курсора на элемент
+        action.perform()                     # синтаксис, выполнение действия
 
     def remove_footer(self):
         # удаление по тегу - футера страницы (перекрывает кнопку "Submit", по факту это баг)

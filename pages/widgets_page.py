@@ -1,5 +1,5 @@
 from locators.widgets_page_locators import AccordionPageLocators, AutoCompletePegeLocators, DatePickerPageLocators, \
-    SliderPageLocators, ProgressBarPageLocators, TabsPageLocators
+    SliderPageLocators, ProgressBarPageLocators, TabsPageLocators, ToolTipsPageLocators
 from selenium.webdriver.common.keys import Keys
 from pages.base_page import BasePage
 from generator.generator import generated_color, generated_date
@@ -84,7 +84,7 @@ class AutoCompletePege(BasePage):
 class DatePickerPage(BasePage):
     locators = DatePickerPageLocators()
 
-    def select_date(self):                              # выбор даты
+    def select_date(self):                               # выбор даты
         date = next(generated_date())
         input_date = self.element_is_visible(self.locators.DATE_INPUT)
         # забираем значение из поля для проверок в тесте (в DOM - value ="дата сегодняшнего дня")
@@ -96,18 +96,18 @@ class DatePickerPage(BasePage):
         value_date_after = input_date.get_attribute('value')
         return value_date_before, value_date_after
 
-    def set_date_by_text(self, element, value):          # выбор по select, element-css элемент и value из generator
+    def set_date_by_text(self, element, value):           # выбор по select, element-css элемент и value из generator
         select = Select(self.element_is_present(element))
         select.select_by_visible_text(value)
 
-    def set_date_item_from_list(self, elements, value):  # выбор числа месяца(list)web, (if-первое вхождение и break)
+    def set_date_item_from_list(self, elements, value):   # выбор числа месяца(list)web, (if-первое вхождение и break)
         item_list = self.elements_are_present(elements)
         for item in item_list:
             if item.text == value:
                 item.click()
                 break
 
-    def select_date_and_time(self):                     # выбор даты и времени (без select)
+    def select_date_and_time(self):                       # выбор даты и времени (без select)
         date = next(generated_date())
         input_date = self.element_is_visible(self.locators.DATE_AND_TIME_INPUT)
         value_date_before = input_date.get_attribute('value')
@@ -126,7 +126,7 @@ class DatePickerPage(BasePage):
 class SliderPage(BasePage):
     locators = SliderPageLocators()
 
-    def change_slider_value(self):
+    def change_slider_value(self):                        # метод по работе с slide элементом
         value_before = self.element_is_visible(self.locators.SLIDER_VALUE).get_attribute('value')
         slider_input = self.element_is_visible(self.locators.INPUT_SLIDER)
         # изменяем положение слайдера (библиотека action-chains, метод описан в BasePage)
@@ -140,7 +140,7 @@ class SliderPage(BasePage):
 class ProgressBarPage(BasePage):
     locators = ProgressBarPageLocators()
 
-    def change_progress_bar_value(self):
+    def change_progress_bar_value(self):                  # метод по работе с progress bar элементом
         value_before = self.element_is_present(self.locators.PROGRES_BAR_VALUE).text
         progress_bar_button = self.element_is_present(self.locators.PROGRESS_BAR_BUTTON)
         progress_bar_button.click()
@@ -153,7 +153,7 @@ class ProgressBarPage(BasePage):
 class TabsPage(BasePage):
     locators = TabsPageLocators()
 
-    def check_tabs(self, tab_name):
+    def check_tabs(self, tab_name):                       # метод по работе с вкладками (tabs)
 
         tabs = {'what':
                     {'title': self.locators.TABS_WHAT,
@@ -175,4 +175,22 @@ class TabsPage(BasePage):
         return button_name.text, len(text_content)
 
 
+class ToolTipsPage(BasePage):
+    locators = ToolTipsPageLocators()
 
+    # метод возврата текса из tool_tips
+    def get_text_from_tool_tips(self, hover_elem, wait_elem):
+        element = self.element_is_present(hover_elem)
+        self.action_move_to_element(element)
+        time.sleep(0.5)
+        self.element_is_visible(wait_elem)
+        tool_tip_text = self.element_is_visible(self.locators.TOOL_TIPS_INNERS)
+        text = tool_tip_text.text
+        return text
+
+    def check_tool_tips(self):                              # метод проверки tool_tips на web (return текста tool_tips)
+        tool_tip_text_button = self.get_text_from_tool_tips(self.locators.BUTTON, self.locators.TOOL_TIP_BUTTON)
+        tool_tip_text_field = self.get_text_from_tool_tips(self.locators.FIELD, self.locators.TOOL_TIP_FIELD)
+        tool_tip_text_cont = self.get_text_from_tool_tips(self.locators.CONTRARY_LINK, self.locators.TOOL_TIP_CONTRARY)
+        tool_tip_text_sect = self.get_text_from_tool_tips(self.locators.SECTION_LINK, self.locators.TOOL_TIP_SECTION)
+        return tool_tip_text_button, tool_tip_text_field, tool_tip_text_cont, tool_tip_text_sect
