@@ -1,5 +1,5 @@
 from pages.widgets_page import AccordionPage, AutoCompletePege, DatePickerPage, SliderPage, ProgressBarPage, TabsPage, \
-    ToolTipsPage
+    ToolTipsPage, MenuPage, SelectMenuPage
 import time
 
 
@@ -108,4 +108,28 @@ class TestWidgets:
             assert contrary_text == 'You hovered over the Contrary', 'hover missing or incorrect content'
             assert section_text == 'You hovered over the 1.10.32', 'hover missing or incorrect content'
 
+    class TestMenu:
+        def test_menu_items(self, driver):
+            menu_page = MenuPage(driver, 'https://demoqa.com/menu')
+            menu_page.open()
+            data = menu_page.check_menu()
+            assert data == ['Main Item 1', 'Main Item 2', 'Sub Item', 'Sub Item', 'SUB SUB LIST »', 'Sub Sub Item 1',
+                            'Sub Sub Item 2', 'Main Item 3'], "menu items don't exist or have not been selected"
 
+    class TestSelectMenu:                                       # практическое задание вкладка "Widgets"-->"Select Menu"
+        def test_select_menu_page(self, driver):
+            select_menu_page = SelectMenuPage(driver, 'https://demoqa.com/select-menu')
+            select_menu_page.open()
+            select_value_before, select_value_after = select_menu_page.select_value()
+            select_one_before, select_one_after = select_menu_page.select_one()
+            color_before, color_after = select_menu_page.select_color_old_style()
+            colors = select_menu_page.select_color_in_multiselect()
+            colors_value = select_menu_page.check_color_in_multi()
+            value_before, value_after = select_menu_page.remove_color_in_multiselect()
+            car_before, car_after = select_menu_page.select_standard_multi()
+            assert select_value_before != select_value_after, "the 'Select Value' field value hasn't been changed"
+            assert select_one_before != select_one_after, "the 'Select One' field value hasn't been changed"
+            assert color_before != color_after, "the 'Old Style Select Menu' value hasn't been changed"
+            assert colors == colors_value, "the added colors are missing in the 'Multiselect drop down'"
+            assert value_before > value_after, "value in 'Multiselect drop down' wasn't deleted"
+            assert car_before != car_after, "value in 'Standard multi select' don't been selected"

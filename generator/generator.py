@@ -55,3 +55,30 @@ def generated_date():
         day=faker_en.day_of_month(),
         time='18:00'
     )
+
+
+# практическое задание вкладка "Widgets"-->"Select Menu"
+def generated_select_value():
+    select_value = ["Group 1, option 1", "Group 1, option 2", "Group 2, option 1", "Group 2, option 2", "A root option",
+                    "Another root option"]
+    value = random.choice(select_value)
+    return value
+
+
+def generated_select_one():
+    select_value = ["Dr.", "Mr.", "Mrs.", "Ms.", "Prof.", "Other"]
+    value_one = random.choice(select_value)
+    return value_one
+
+
+def generated_colors_old_select():
+    select_color = ["Blue", "Green", "Yellow", "Purple", "Black", "White", "Voilet", "Indigo", "Magenta", "Aqua"]
+    color_old = random.choice(select_color)
+    return color_old
+
+
+def generated_color_multiselect():
+    yield Color(
+        color_name=["Green", "Blue", "Black", "Red"]
+    )
+

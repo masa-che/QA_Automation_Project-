@@ -71,4 +71,34 @@ class ToolTipsPageLocators:
     SECTION_LINK = (By.XPATH, '//*[.="1.10.32"]')
     TOOL_TIP_SECTION = (By.CSS_SELECTOR, 'a[aria-describedby="sectionToolTip"]')
 
-    TOOL_TIPS_INNERS = (By.CSS_SELECTOR, 'div[class="tooltip-inner"]')                 # селектор текста  (tool tips)
+    TOOL_TIPS_INNERS = (By.CSS_SELECTOR, 'div[class="tooltip-inner"]')     # селектор текста  (tool tips)
+
+
+class MenuPageLocators:
+    MENU_ITEM_LIST = (By.CSS_SELECTOR, 'ul[id="nav"] li a')                # список всех селекторов элементов MENU
+
+
+class SelectMenuPageLocators:                                              # задание вкладка "Widgets"-->"Select Menu"
+    # field "Select Value"
+    SELECT_VALUE_BEFORE = (By.CSS_SELECTOR, '#withOptGroup > div > div.css-1hwfws3 > div.css-1wa3eu0-placeholder')
+    SELECT_VALUE_AFTER = (By.CSS_SELECTOR, '#withOptGroup > div > div.css-1hwfws3 > div.css-1uccc91-singleValue')
+    SELECT_VALUE_INPUT = (By.CSS_SELECTOR, 'div[id="withOptGroup"] input[id="react-select-2-input"]')
+
+    # field "Select One"
+    SELECT_ONE_BEFORE = (By.CSS_SELECTOR, '#selectOne > div > div.css-1hwfws3 > div.css-1wa3eu0-placeholder')
+    SELECT_ONE_AFTER = (By.CSS_SELECTOR, '#selectOne > div > div.css-1hwfws3 > div.css-1uccc91-singleValue')
+    SELECT_ONE_INPUT = (By.CSS_SELECTOR, 'input[id="react-select-3-input"]')
+
+    # field "Old Style Select Menu"
+    OLD_STYLE_SELECT = (By.CSS_SELECTOR, 'select[id="oldSelectMenu"]')
+
+    # "Multiselect drop down"
+    MULTI_COLOR_INPUT = (By.CSS_SELECTOR, 'input[id="react-select-4-input"]')
+    MULTI_COLOR_VALUE = (By.CSS_SELECTOR, 'div[class="css-12jo7m5"]')
+    MULTI_COLOR_VALUE_REMOVE = (By.CSS_SELECTOR, 'div[class="css-xb97g8"] svg path')
+
+    # "Standard multi select"
+    MULTI_STANDARD_SELECT = (By.CSS_SELECTOR, 'select[id="cars"]')
+
+
+

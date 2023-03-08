@@ -1,8 +1,10 @@
 from locators.widgets_page_locators import AccordionPageLocators, AutoCompletePegeLocators, DatePickerPageLocators, \
-    SliderPageLocators, ProgressBarPageLocators, TabsPageLocators, ToolTipsPageLocators
+    SliderPageLocators, ProgressBarPageLocators, TabsPageLocators, ToolTipsPageLocators, MenuPageLocators, \
+    SelectMenuPageLocators
 from selenium.webdriver.common.keys import Keys
 from pages.base_page import BasePage
-from generator.generator import generated_color, generated_date
+from generator.generator import generated_color, generated_date, generated_select_value, generated_select_one, \
+    generated_colors_old_select, generated_color_multiselect
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import Select
 
@@ -194,3 +196,108 @@ class ToolTipsPage(BasePage):
         tool_tip_text_cont = self.get_text_from_tool_tips(self.locators.CONTRARY_LINK, self.locators.TOOL_TIP_CONTRARY)
         tool_tip_text_sect = self.get_text_from_tool_tips(self.locators.SECTION_LINK, self.locators.TOOL_TIP_SECTION)
         return tool_tip_text_button, tool_tip_text_field, tool_tip_text_cont, tool_tip_text_sect
+
+
+class MenuPage(BasePage):
+    locators = MenuPageLocators()
+
+    def check_menu(self):
+        menu_items_list = self.elements_are_present(self.locators.MENU_ITEM_LIST)
+        data = []
+        for item in menu_items_list:
+            self.action_move_to_element(item)
+            data.append(item.text)
+        return data
+
+
+# практическое задание вкладка "Widgets"-->"Select Menu"
+class SelectMenuPage(BasePage):
+    locators = SelectMenuPageLocators()
+
+    def select_value(self):                                 # метод заполнения поля "Select Value"
+        # генерация случайного значения из списка(list) указанных в bundle.js
+        value = generated_select_value()
+        # взятие текста изначально указанного в поле "Select Value" - необходимо для конечной проверки в тесте
+        select_value_before = self.element_is_present(self.locators.SELECT_VALUE_BEFORE).text
+        # изменение значения поля "Select Value", подставляем значение из нашего генератора
+        self.element_is_visible(self.locators.SELECT_VALUE_INPUT).send_keys(value)
+        # нажатие кнопки RETURN для закрытия drop_box "Select Value"
+        self.element_is_visible(self.locators.SELECT_VALUE_INPUT).send_keys(Keys.RETURN)
+        time.sleep(1)
+        # взятие генерируемого текста поля "Select Value" генерируемого  - необходимо для конечной проверки в тесте
+        select_value_after = self.element_is_present(self.locators.SELECT_VALUE_AFTER).text
+        return select_value_before, select_value_after
+
+    def select_one(self):                                   # метод заполнения поля "Select One"
+        value = generated_select_one()
+        select_one_before = self.element_is_present(self.locators.SELECT_ONE_BEFORE).text
+        self.element_is_visible(self.locators.SELECT_ONE_INPUT).send_keys(value)
+        self.element_is_visible(self.locators.SELECT_ONE_INPUT).send_keys(Keys.RETURN)
+        time.sleep(1)
+        select_one_after = self.element_is_present(self.locators.SELECT_VALUE_AFTER).text
+        return select_one_before, select_one_after
+
+    def select_color_old_style(self):                       # метод выбора цвета из "Old Style Select Menu"
+        color = generated_colors_old_select()
+        input_date = self.element_is_visible(self.locators.OLD_STYLE_SELECT)
+        color_before = self.element_is_visible(self.locators.OLD_STYLE_SELECT).get_attribute('value')
+        time.sleep(1)
+        input_date.click()
+        self.select_color_by_text(self.locators.OLD_STYLE_SELECT, color)
+        time.sleep(1)
+        input_date.click()
+        time.sleep(1)
+        color_after = self.element_is_visible(self.locators.OLD_STYLE_SELECT).get_attribute('value')
+        return color_before, color_after
+
+    def select_color_by_text(self, element, value):  # выбор по select, element-css элемент и value из generator
+        select = Select(self.element_is_present(element))
+        select.select_by_visible_text(value)
+
+    def select_color_in_multiselect(self):           # метод добавления цветов в dropdown "Multiselect drop down"
+        # sample - можно вытягивать СПИСКОМ несколько УНИКАЛЬНЫХ значений из списка color_name,
+        # (k - количество значений взятых из списка)
+        colors = random.sample(next(generated_color_multiselect()).color_name, k=random.randint(2, 4))
+        # циклом фор бежим k раз внутри colors выбирая цвета для dropdown menu
+        for color in colors:
+            input_multi = self.element_is_visible(self.locators.MULTI_COLOR_INPUT)
+            input_multi.send_keys(color)
+            input_multi.send_keys(Keys.ENTER)
+            time.sleep(1)
+        # colors - list
+        return colors
+
+    def check_color_in_multi(self):                  # метод для сравнения цветов из генератор,с цветами в "Multiselect drop down"
+        colors_list = self.elements_are_visible(self.locators.MULTI_COLOR_VALUE)
+        colors = []
+        for color in colors_list:
+            colors.append(color.text)
+        # colors - list
+        return colors
+
+    def remove_color_in_multiselect(self):           # метод удаление значения в "Multiselect drop down"
+        # определяем длину списка до удаления значений в поле локатора MULTI_COLOR_VALUE
+        count_value_before = len(self.elements_are_visible(self.locators.MULTI_COLOR_VALUE))
+        # в remove_button_list кладём все значения с кнопкой удаления элемента(MULTI_VALUE_COLOR_REMOVE)
+        # и циклом for пробегаем по всем этим элементам списка нажимая click() - происходит удаление элементов в поле
+        remove_button_list = self.elements_are_visible(self.locators.MULTI_COLOR_VALUE_REMOVE)
+        for value in remove_button_list:
+            value.click()
+            time.sleep(1)
+        # удаляем один элемент и выходим из цикла (в assert будем сравнивать длину списков before/after)
+            break
+        # определяем длину списка после удаления значений в поле локатора MULTI_VALUE
+        count_value_after = len(self.elements_are_visible(self.locators.MULTI_COLOR_VALUE))
+        return count_value_before, count_value_after
+
+    def select_standard_multi(self):                  # метод добавления авто в dropdown "Standard multi select"
+        car_before = self.element_is_visible(self.locators.MULTI_STANDARD_SELECT).get_attribute('value')
+        select_multi = Select(self.element_is_present(self.locators.MULTI_STANDARD_SELECT))
+        select_multi.select_by_visible_text('Volvo')
+        time.sleep(0.5)
+        select_multi.select_by_visible_text('Saab')
+        time.sleep(0.5)
+        select_multi.select_by_visible_text('Audi')
+        time.sleep(0.5)
+        car_after = self.element_is_visible(self.locators.MULTI_STANDARD_SELECT).get_attribute('value')
+        return car_before, car_after
