@@ -51,6 +51,11 @@ class BasePage:
         action.drag_and_drop_by_offset(element, x_coord, y_coord)
         action.perform()
 
+    def action_drag_and_drop_to_element(self, what, where):                 # "what(какой ),where(куда)" меняем местами элементы
+        action = ActionChains(self.driver)
+        action.drag_and_drop(what, where)
+        action.perform()
+
     def action_move_to_element(self, element):                              # перемещение курсора мышки на элемент
         action = ActionChains(self.driver)   # библиотека действий с мышкой (скролл, клик, наведение на элемент etc)
         action.move_to_element(element)      # синтаксис, наведение курсора на элемент
