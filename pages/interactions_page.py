@@ -1,4 +1,4 @@
-from locators.interactions_page_locators import SortablePageLocators, SelectablePageLocators
+from locators.interactions_page_locators import SortablePageLocators, SelectablePageLocators, ResizablePageLocators
 from pages.base_page import BasePage
 
 import random
@@ -62,4 +62,35 @@ class SelectablePage(BasePage):
         return active_element.text
 
 
+class ResizablePage(BasePage):
+    locators = ResizablePageLocators()
 
+    def get_px_from_width_height(self, value_of_size):    # метод для работы с шириной и высотой (pix пример 500, 300)
+        # без split и replace получается громоздкий return --> width: 500px; height: 300px;........
+        # первый split отсекает по ';' берём [0] элемент из списка 'width: 500px'
+        # второй сплит отсекает по ':' берём [1] элемент из списка ' 500px'
+        # replace убираем пробел, получаем '500px'
+        width = value_of_size.split(';')[0].split(':')[1].replace(' ', '')
+        height = value_of_size.split(';')[1].split(':')[1].replace(' ', '')
+        return width, height
+
+    def get_max_min_size(self, element):
+        size = self.element_is_present(element)
+        size_value = size.get_attribute('style')
+        return size_value
+
+    def change_size_resizable_box(self):
+        self.action_drag_and_drop_by_offset(self.element_is_present(self.locators.RESIZABLE_BOX_HANDLE), 500, 200)
+        max_size = self.get_px_from_width_height(self.get_max_min_size(self.locators.RESIZABLE_BOX))
+        self.action_drag_and_drop_by_offset(self.element_is_present(self.locators.RESIZABLE_BOX_HANDLE), -700, -300)
+        min_size = self.get_px_from_width_height(self.get_max_min_size(self.locators.RESIZABLE_BOX))
+        return max_size, min_size
+
+    def change_size_resizable(self):
+        self.action_drag_and_drop_by_offset(self.element_is_visible(self.locators.RESIZABLE_HANDLE),
+                                            random.randint(1, 500), random.randint(1, 300))
+        max_size = self.get_px_from_width_height(self.get_max_min_size(self.locators.RESIZABLE))
+        self.action_drag_and_drop_by_offset(self.element_is_visible(self.locators.RESIZABLE_HANDLE),
+                                            random.randint(-200, -1), random.randint(-200, -1))
+        min_size = self.get_px_from_width_height(self.get_max_min_size(self.locators.RESIZABLE))
+        return max_size, min_size
