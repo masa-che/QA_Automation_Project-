@@ -46,12 +46,12 @@ class BasePage:
         action.context_click(element)        # синтаксис, выбор клика правой кнопкой мыши
         action.perform()                     # синтаксис, выполнение действия
 
-    def action_drag_and_drop_by_offset(self, element, x_coord, y_coord):    # перетягивание слайдера по координатам
+    def action_drag_and_drop_by_offset(self, element, x_coord, y_coord):    # перетягивание элемента (например слайдера, div box) по координатам
         action = ActionChains(self.driver)
         action.drag_and_drop_by_offset(element, x_coord, y_coord)
         action.perform()
 
-    def action_drag_and_drop_to_element(self, what, where):                 # "what(какой ),where(куда)" меняем местами элементы
+    def action_drag_and_drop_to_element(self, what, where):                 # "what(какой ),where(куда)" меняет местами элементы
         action = ActionChains(self.driver)
         action.drag_and_drop(what, where)
         action.perform()

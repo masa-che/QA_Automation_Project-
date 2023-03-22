@@ -201,7 +201,7 @@ class ToolTipsPage(BasePage):
 class MenuPage(BasePage):
     locators = MenuPageLocators()
 
-    def check_menu(self):
+    def check_menu(self):                                  # метод проверки заголовков в меню (1локатор для 8 элементов)
         menu_items_list = self.elements_are_present(self.locators.MENU_ITEM_LIST)
         data = []
         for item in menu_items_list:

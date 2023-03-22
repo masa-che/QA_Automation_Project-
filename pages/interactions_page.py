@@ -178,7 +178,7 @@ class DraggablePage(BasePage):
         top = re.findall(r'-\d+|\d+', position.split(";")[2])
         return top
 
-    def constraint_axis_x(self):
+    def constraint_axis_x(self):            # метод возвращает данные положения элемента до и после перемещения по оси x
         self.element_is_visible(self.locators.AXIS_TAB).click()
         only_x = self.element_is_visible(self.locators.ONLY_X)
         position_x = self.get_before_and_after_position(only_x)
@@ -194,7 +194,7 @@ class DraggablePage(BasePage):
         # print(top_x_after)
         return [left_x_before, top_x_before], [left_x_after, top_x_after]
 
-    def constraint_axis_y(self):
+    def constraint_axis_y(self):            # метод возвращает данные положения элемента до и после перемещения по оси y
         self.element_is_visible(self.locators.AXIS_TAB).click()
         only_y = self.element_is_visible(self.locators.ONLY_Y)
         position_y = self.get_before_and_after_position(only_y)
@@ -210,7 +210,7 @@ class DraggablePage(BasePage):
         # print(top_y_after)
         return [left_y_before, top_y_before], [left_y_after, top_y_after]
 
-    def box_restricted_to_drag(self):
+    def box_restricted_to_drag(self):       # метод возвращает данные положения элемента до и после изменения положения внутри restricted box
         self.element_is_visible(self.locators.CONTAINER_TAB).click()
         box_element = self.element_is_visible(self.locators.DRAGGABLE_BOX)
         drag_element = self.get_before_and_after_position(box_element)
