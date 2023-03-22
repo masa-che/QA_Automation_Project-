@@ -1,9 +1,10 @@
 from locators.interactions_page_locators import SortablePageLocators, SelectablePageLocators, ResizablePageLocators, \
-    DroppablePageLocators
+    DroppablePageLocators, DraggablePageLocators
 from pages.base_page import BasePage
 
 import random
 import time
+import re
 
 
 class SortablePage(BasePage):
@@ -146,6 +147,81 @@ class DroppablePage(BasePage):
         time.sleep(1)
         position_after_revert = revert.get_attribute('style')
         return position_after_move, position_after_revert
+
+
+class DraggablePage(BasePage):
+    locators = DraggablePageLocators()
+
+    # определение позиции перетаскиваемого элемента(рандом)
+    def get_before_and_after_position(self, drag_element):
+        self.action_drag_and_drop_by_offset(drag_element, random.randint(-50, 250), random.randint(-50, 250))
+        before_position = drag_element.get_attribute('style')
+        self.action_drag_and_drop_by_offset(drag_element, random.randint(-50, 250), random.randint(-50, 250))
+        after_position = drag_element.get_attribute('style')
+        return before_position, after_position
+
+    # заход на страницу/вкладку, поиск элемента, return координат нахождения элемента (до и после перетаскивания эл-та)
+    def simple_drag_box(self):
+        self.element_is_visible(self.locators.SIMPLE_TAB).click()
+        drag_div = self.element_is_visible(self.locators.DRAG_ME)
+        before_position, after_position = self.get_before_and_after_position(drag_div)
+        return before_position, after_position
+
+    # re.findall(pattern, string) - Возвращает список всех найденных совпадений.
+    # У метода findall() нет ограничений на поиск в начале или конце строки
+    # забираем left координату нашего элемента(пример - 'position: relative; left: 372px; top: 0px;' - забираем 372)
+    def get_left_position(self, position):
+        left = re.findall(r'-\d+|\d+', position.split(";")[1])
+        return left
+
+    def get_top_position(self, position):
+        top = re.findall(r'-\d+|\d+', position.split(";")[2])
+        return top
+
+    def constraint_axis_x(self):
+        self.element_is_visible(self.locators.AXIS_TAB).click()
+        only_x = self.element_is_visible(self.locators.ONLY_X)
+        position_x = self.get_before_and_after_position(only_x)
+        # print(position_x)
+        # пример 'position: relative; left: 372px; top: 0px;'-это[0],'position: relative; left: 494px; top: 0px;'-это[1]
+        left_x_before = self.get_left_position(position_x[0])
+        left_x_after = self.get_left_position(position_x[1])
+        top_x_before = self.get_top_position(position_x[0])
+        top_x_after = self.get_top_position(position_x[1])
+        # print(left_x_before)
+        # print(top_x_before)
+        # print(left_x_after)
+        # print(top_x_after)
+        return [left_x_before, top_x_before], [left_x_after, top_x_after]
+
+    def constraint_axis_y(self):
+        self.element_is_visible(self.locators.AXIS_TAB).click()
+        only_y = self.element_is_visible(self.locators.ONLY_Y)
+        position_y = self.get_before_and_after_position(only_y)
+        # print(position_y)
+        # пример 'position: relative; left: 0px; top: 278px;'-это[0],'position: relative; left: 0px; top: 467px;'-это[1]
+        left_y_before = self.get_left_position(position_y[0])
+        left_y_after = self.get_left_position(position_y[1])
+        top_y_before = self.get_top_position(position_y[0])
+        top_y_after = self.get_top_position(position_y[1])
+        # print(left_y_before)
+        # print(top_y_before)
+        # print(left_y_after)
+        # print(top_y_after)
+        return [left_y_before, top_y_before], [left_y_after, top_y_after]
+
+    def box_restricted_to_drag(self):
+        self.element_is_visible(self.locators.CONTAINER_TAB).click()
+        box_element = self.element_is_visible(self.locators.DRAGGABLE_BOX)
+        drag_element = self.get_before_and_after_position(box_element)
+        # print(drag_element)
+        # пример position: relative; left: 195px; top: 41px;'это[0],'position: relative; left: 377px; top: 106px;'это[1]
+        left_before = self.get_left_position(drag_element[0])
+        left_after = self.get_left_position(drag_element[1])
+        top_before = self.get_top_position(drag_element[0])
+        top_after = self.get_top_position(drag_element[1])
+        return float(left_before[0]), float(left_after[0]), float(top_before[0]), float(top_after[0])
+
 
 
 

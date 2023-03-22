@@ -1,5 +1,5 @@
 
-from pages.interactions_page import SortablePage, SelectablePage, ResizablePage, DroppablePage
+from pages.interactions_page import SortablePage, SelectablePage, ResizablePage, DroppablePage, DraggablePage
 
 
 class TestInteractions:
@@ -72,4 +72,40 @@ class TestInteractions:
             not_will_after_move, not_will_after_revert = droppable_page.drop_revert_draggable('not_will')
             assert will_after_move != will_after_revert, 'the elements has not reverted'
             assert not_will_after_move == not_will_after_revert, 'the elements has  reverted'
+
+    class TestDraggablePage:
+        def test_simple_draggable(self, driver):
+            draggable_page = DraggablePage(driver, 'https://demoqa.com/dragabble')
+            draggable_page.open()
+            before_pos, after_pos = draggable_page.simple_drag_box()
+            print(before_pos)
+            print(after_pos)
+            assert before_pos != after_pos, "element position hasn't been changed"
+
+        def test_axis_restricted_draggable(self, driver):
+            draggable_page = DraggablePage(driver, 'https://demoqa.com/dragabble')
+            draggable_page.open()
+            x_before, x_after = draggable_page.constraint_axis_x()
+            y_before, y_after = draggable_page.constraint_axis_y()
+            print(x_before)
+            print(x_after)
+            print(y_before)
+            print(y_after)
+            assert x_before[0][0] != x_after[0][0], "position hasn't changed"   # x - всегда меняется
+            assert x_before[1][0] == x_before[1][0], "position hasn't changed"  # y - всегда ноль
+            assert y_before[0][0] == y_after[0][0],  "position hasn't changed"  # x - всегда ноль
+            assert y_before[1][0] != y_after[1][0],  "position hasn't changed"  # y - всегда меняется
+
+        def test_container_restricted(self, driver):
+            draggable_page = DraggablePage(driver, 'https://demoqa.com/dragabble')
+            draggable_page.open()
+            l_before, l_after, t_before, t_after = draggable_page.box_restricted_to_drag()
+            print(l_before)
+            print(l_after)
+            print(t_before)
+            print(t_after)
+            assert -0.25 < l_before < 735.0 and -0.25 < l_after < 735.0, "box position hasn't crossed  restricted aria"
+            assert -0.25 < t_before < 108.0 and -0.25 < t_after < 108.0, "box position hasn't crossed  restricted aria"
+
+
 

@@ -67,8 +67,8 @@ class CheckBoxPage(BasePage):
         checked_list = self.elements_are_present(self.locators.CHECKED_ITEMS)  # список отм елементов CHECKED_ITEMS
         data = []                                                              # [list] в который будут записаны данные
         for box in checked_list:                                               # все отмеченные элементы из checked_list
-            title_item = box.find_element("xpath", self.locators.TITLE_ITEM)   # отбираются по xpath TITLE_ITEM
-            # print(title_item.text)                                           # принтуем для сравнения
+            title_item = box.find_element(By.XPATH, self.locators.TITLE_ITEM)  # отбираются по xpath TITLE_ITEM
+            print(title_item.text)                                            # принтуем для сравнения
             data.append(title_item.text)                                       # add в data текст отмеченных checkboxes
         return str(data).replace(' ', '').replace('.doc', '').lower()          # return отформатированный [список] data
 
