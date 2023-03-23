@@ -1,4 +1,4 @@
-
+import time
 from pages.interactions_page import SortablePage, SelectablePage, ResizablePage, DroppablePage, DraggablePage
 
 
@@ -106,6 +106,6 @@ class TestInteractions:
             print(t_after)
             assert -0.25 < l_before < 735.0 and -0.25 < l_after < 735.0, "box position hasn't crossed  restricted aria"
             assert -0.25 < t_before < 108.0 and -0.25 < t_after < 108.0, "box position hasn't crossed  restricted aria"
-
+            time.sleep(3)
 
 
