@@ -123,7 +123,7 @@ class WebTablePage(BasePage):
             self.element_is_visible(self.locators.SUBMIT).click()                   # клик по кнопке Submit
             count -= 1                                                              # после итерации счётчик уменьшается на единицу
             # возвращаем список для сравнения с output функции check_new_added_person заменяя int на str
-        return [firstname, lastname, str(age), email, str(salary), department]
+            return [firstname, lastname, str(age), email, str(salary), department]
 
     def check_new_added_person(self):                                               # def для проверки правильности добавления данных
         person_list = self.elements_are_present(self.locators.FULL_PERSON_LIST)
@@ -137,7 +137,7 @@ class WebTablePage(BasePage):
 
     def check_search_person(self):     # функция нахождения строки в webtable по delete button
         delete_button = self.element_is_present(self.locators.DELETE_BUTTON)        # поиск кнопки Delete в таблице для
-        row = delete_button.find_element("xpath", self.locators.ROW_PARENT)         # поиска родительской строки
+        row = delete_button.find_element(By.XPATH, self.locators.ROW_PARENT)        # поиска родительской строки
         # возвращаем текст из строки таблицы webtable - списком (для проверки поиска одного списка в другом)
         return row.text.splitlines()
 
@@ -249,7 +249,7 @@ class UpLoadAndDownloadPage(BasePage):
         # print(link)
         link_b = base64.b64decode(link)             # расшифровка побитно линки с кодом изображения
         # путь к файлу r- "сырая строка" обход экранирования (чтобы не ругалось на бэкслеш) и f- для редактирования
-        path_file = rf'c:\Users\Максим\PycharmProjects\QA_Automation_Project-\filetest{random.randint(0, 101)}.jpg'
+        path_file = rf'c:\Users\Maxim\PycharmProjects\QA_Pet_Automation_Project\filetest{random.randint(0, 101)}.jpg'
         # конструкция 'with as' - работает как менеджер создания контекста f: (работа с файлом) w - запись в файл
         # b - открывается как двоичный файл, + - режим чтения и записи
         with open(path_file, 'wb+') as f:

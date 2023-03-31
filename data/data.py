@@ -7,6 +7,7 @@ class Person:
     full_name: str = None
     first_name: str = None
     last_name: str = None
+    middle_name: str = None
     age: int = None
     salary: int = None
     department: str = None
