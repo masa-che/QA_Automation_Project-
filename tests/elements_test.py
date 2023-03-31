@@ -192,7 +192,7 @@ class TestElements:
             assert appear_button is True, "button didn't appeared after 5 second"
 
         @allure.title('Check enable button')
-        def test_enable_button(self, driver):                        # тест click кнопки(проверка кликабельности)
+        def test_enable_button(self, driver):                        # click кнопки(проверка кликабельности)
             dynamic_properties_page = DynamicPropertiesPage(driver, 'https://demoqa.com/dynamic-properties')
             dynamic_properties_page.open()
             enable_button = dynamic_properties_page.check_enable_button()
