@@ -52,6 +52,10 @@ class CheckBoxPage(BasePage):
 #            print(i.text)                                                # проверка возврата (checkbox tree) елементов
 #            self.go_to_element(i)                                        # 'фокусировка' на каждом эл. ITEMS_LIST
 #            i.click()
+#      for i in range(15):                                                # так же рабочее решение
+#        item = random.choice(item_list)
+#        self.go_to_element(item)
+#        item.click()
         count = 17                                                        # счётчик итераций
         while count != 0:                                                 # пока счётчик не равен нулю то:
             item = item_list[random.randint(1, 15)]                       # берём случайный элемент из списка ITEM_LIST
@@ -67,7 +71,7 @@ class CheckBoxPage(BasePage):
         checked_list = self.elements_are_present(self.locators.CHECKED_ITEMS)  # список отм элементов CHECKED_ITEMS
         data = []                                                              # [list] в который будут записаны данные
         for box in checked_list:                                               # все отмеченные элементы из checked_list
-            title_item = box.find_element(By.XPATH, self.locators.TITLE_ITEM)  # отбираются по xpath TITLE_ITEM
+            title_item = box.find_element("xpath", self.locators.TITLE_ITEM)  # отбираются по xpath TITLE_ITEM
             print(title_item.text)                                             # принтуем для сравнения
             data.append(title_item.text)                                       # add в data текст отмеченных checkboxes
         return str(data).replace(' ', '').replace('.doc', '').lower()          # return отформатированный [список] data
