@@ -6,11 +6,11 @@ from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebT
     UpLoadAndDownloadPage, DynamicPropertiesPage
 
 
-#@allure.suite("Elements")                               # указываем что это набор тестов (suite) и имя "Elements"
+@allure.suite("Elements")                               # указываем что это набор тестов (suite) и имя "Elements"
 class TestElements:
-    #@allure.feature("Text Box")                         # указываем что тесты с "характерной чертой" (feature)
+    @allure.feature("Text Box")                         # указываем что тесты с "характерной чертой" (feature)
     class TestTextBox:
-        #@allure.title("Check Text Box")                 # указываем что делает тест(title)
+        @allure.title("Check Text Box")                 # указываем что делает тест(title)
         def test_text_box(self, driver):
             text_box_page = TextBoxPage(driver, 'https://demoqa.com/text-box')
             text_box_page.open()
@@ -22,9 +22,9 @@ class TestElements:
             assert permanent_address == output_per_addr, "the permanent_address doesn't match"
             time.sleep(15)
 
-    #@allure.feature('CheckBox')
+    @allure.feature('CheckBox')
     class TestCheckBox:
-        #@allure.title('Check CheckBox')
+        @allure.title('Check CheckBox')
         def test_check_box(self, driver):
             check_box_page = CheckBoxPage(driver, 'https://demoqa.com/checkbox')
             check_box_page.open()

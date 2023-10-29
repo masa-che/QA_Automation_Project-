@@ -7,12 +7,12 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope='function')                      # при помощи этой фикстуры, тест выполняется один раз для каждой функции
 def driver():
     options = Options()
-    options.add_argument("user-data-dir=C:\\profile")
-    driver = webdriver.Chrome(options=options)
-    driver.get("https://google.com")
+    options.add_argument("user-data-dir=C:\\profile")  # создание временного профиля в браузере
+    driver = webdriver.Chrome(options=options)         # запуск браузера с профилем add block
+    driver.get("https://google.com")                   # первоначальная страница запуска профиля
     options.add_argument('--headless')
     driver.implicitly_wait(10)
     driver.maximize_window()
