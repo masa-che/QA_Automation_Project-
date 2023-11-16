@@ -199,6 +199,10 @@ class TestElements:
             assert enable_button is True, "button didn't enabled after 5 second"
 
 
+# pytest --alluredir=tests\allure_results .\tests\elements_test.py                                           - все
+# pytest --alluredir=tests\allure_results .\tests\elements_test.py::TestElements::TestTextBox::test_text_box - один
+# allure serve .\tests\allure_results\                                                                       - генерировать Allure-отчёт на web
+
 
 
 

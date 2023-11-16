@@ -1,4 +1,6 @@
 import base64
+
+import allure
 import requests
 import time
 import os
@@ -17,21 +19,25 @@ class TextBoxPage(BasePage):
     locators = TextBoxPageLocators()
 
     # Метод send_keys() в Python используется для ввода текста в текстовый элемент(поле)
+    @allure.step("Fill in all fields")
     def fill_all_fields(self):
         person_info = next(generated_person())  # итератор next берёт по одному значению для каждого поля TextBox
         full_name = person_info.full_name       # взятое значение итератором next определяем в переменную full_name и тд
         email = person_info.email
         current_address = person_info.current_address
         permanent_address = person_info.permanent_address
-        self.element_is_visible(self.locators.FULL_NAME).send_keys(full_name)
-        self.element_is_visible(self.locators.EMAIL).send_keys(email)
-        self.element_is_visible(self.locators.CURRENT_ADDRESS).send_keys(current_address)
-        self.element_is_visible(self.locators.PERMANENT_ADDRESS).send_keys(permanent_address)
-        self.element_is_visible(self.locators.SUBMIT).click()
+        with allure.step('filing fields'):
+            self.element_is_visible(self.locators.FULL_NAME).send_keys(full_name)
+            self.element_is_visible(self.locators.EMAIL).send_keys(email)
+            self.element_is_visible(self.locators.CURRENT_ADDRESS).send_keys(current_address)
+            self.element_is_visible(self.locators.PERMANENT_ADDRESS).send_keys(permanent_address)
+        with allure.step('click SUBMIT button'):
+            self.element_is_visible(self.locators.SUBMIT).click()
         return full_name, email, current_address, permanent_address
 
     # функция берёт текст (метод .text) из поля board после нажатия кнопки submit и возвращает return-ом для проверки
     # для читабельности разобьём split-ом данные DOM-дерева для получения вводимых данных в функции fill_all_fields
+    @allure.step('check filled form')
     def check_filled_form(self):
         full_name = self.element_is_present(self.locators.CREATED_FULL_NAME).text.split(':')[1]
         email = self.element_is_present(self.locators.CREATED_EMAIL).text.split(':')[1]
@@ -43,9 +49,11 @@ class TextBoxPage(BasePage):
 class CheckBoxPage(BasePage):
     locators = CheckBoxPageLocators()
 
+    @allure.step('open full list')
     def open_full_list(self):                                             # в функции используются методы class BasePage
         self.element_is_visible(self.locators.EXPAND_ALL_BUTTON).click()  # клик кнопки выбора всех елементов checkbox
 
+    @allure.step('click random items')
     def click_random_checkbox(self):
         item_list = self.elements_are_visible(self.locators.ITEM_LIST)
 #       for i in item_list:                                               # for проходит по каждому из эл-ов ITEM_LIST
@@ -67,6 +75,7 @@ class CheckBoxPage(BasePage):
             else:                                                         # иначе, когда count будет не больше нуля
                 break                                                     # выход из цикла
 
+    @allure.step('get checked checkbox')
     def get_checked_checkboxes(self):
         checked_list = self.elements_are_present(self.locators.CHECKED_ITEMS)  # список отм элементов CHECKED_ITEMS
         data = []                                                              # [list] в который будут записаны данные
@@ -76,6 +85,7 @@ class CheckBoxPage(BasePage):
             data.append(title_item.text)                                       # add в data текст отмеченных checkboxes
         return str(data).replace(' ', '').replace('.doc', '').lower()          # return отформатированный [список] data
 
+    @allure.step('get output result')
     def get_output_result(self):
         result_list = self.elements_are_present(self.locators.OUTPUT_RESULT)   # список элементов OUTPUT_RESULT
         data = []                                                              # [list] в который будут записаны данные
@@ -91,6 +101,7 @@ class CheckBoxPage(BasePage):
 class RadioButtonPage(BasePage):
     locators = RadioButtonLocators()
 
+    @allure.step('click on the radiobutton')
     def check_radio_button(self, choice_rb):
         dictionary_rb = {'Yes': self.locators.RADIO_BUTTON_YES,
                          'Impressive': self.locators.RADIO_BUTTON_IMPRESSIVE,
@@ -98,6 +109,7 @@ class RadioButtonPage(BasePage):
         # в переменную radio, из словаря будет выбран choice_rb локатор по значению ключа (Yes, Impressive, No)
         radio = self.element_is_visible(dictionary_rb[choice_rb]).click()
 
+    @allure.step('get output result')
     def get_output_result(self):
         # возвращает текст в поле вывода при нажатии на radio_button
         return self.element_is_present(self.locators.OUTPUT_RESULT_RB).text
@@ -106,6 +118,7 @@ class RadioButtonPage(BasePage):
 class WebTablePage(BasePage):
     locators = WebTablePageLocators()
 
+    @allure.step('add new person')
     def add_new_person(self):                                                           # добавление нового пользователя
         count = 1
         while count != 0:
@@ -129,6 +142,7 @@ class WebTablePage(BasePage):
             # возвращаем список для сравнения с output функции check_new_added_person заменяя int на str
             return [firstname, lastname, str(age), email, str(salary), department]
 
+    @allure.step('check added people')
     def check_new_added_person(self):                                               # def для проверки правильности добавления данных
         person_list = self.elements_are_present(self.locators.FULL_PERSON_LIST)
         data = []                                                                   # [list] в который будут записаны данные
@@ -136,15 +150,18 @@ class WebTablePage(BasePage):
             data.append(item.text.splitlines())   # получаем отдельные списки отдельных строк таблицы WebTable([],[],[])
         return data
 
+    @allure.step('find some person')
     def search_some_person(self, key_word):  # функция нахождения пользователя по key word (вводимого в поле поиска)
         self.element_is_visible(self.locators.SEARCH_INPUT).send_keys(key_word)     # key_word вписываем в строку поиска по таблице на странице WebTable
 
+    @allure.step('check found person')
     def check_search_person(self):     # функция нахождения строки в webtable по delete button
         delete_button = self.element_is_present(self.locators.DELETE_BUTTON)        # поиск кнопки Delete в таблице для
         row = delete_button.find_element(By.XPATH, self.locators.ROW_PARENT)        # поиска родительской строки
         # возвращаем текст из строки таблицы webtable - списком (для проверки поиска одного списка в другом)
         return row.text.splitlines()
 
+    @allure.step('update person information')
     def update_person_info(self):      # функция обновления age у пользователя, и возврата значения age (для проверки)
         person_info = next(generated_person())  # next берёт значение для переменной age путём генерации случ. числа
         age = person_info.age
@@ -154,12 +171,15 @@ class WebTablePage(BasePage):
         self.element_is_visible(self.locators.SUBMIT).click()                   # click по  кнопке Submit
         return str(age)                                                         # возвращаем age для дальнейшей проверки
 
+    @allure.step('delete person')
     def delete_person(self):           # функция удаления строки с данными пользователя из таблицы webtable
         self.element_is_visible(self.locators.DELETE_BUTTON).click()
 
+    @allure.step('check deleted person')
     def check_deleted_person(self):    # функция поиска локатора отсутствия строк и return текста "No rows found"
         return self.element_is_present(self.locators.NO_ROWS_FOUND).text
 
+    @allure.step('select up to some rows')
     def select_up_to_some_rose(self):  # функция выбора количества строк в таблице WebTable
         count = [5, 10, 20, 25, 50, 100]  # счётчик количества строк
         data = []                         # буфер для возврата данных
@@ -173,6 +193,7 @@ class WebTablePage(BasePage):
             data.append(self.check_count_rows())
         return data
 
+    @allure.step('check count rows')
     def check_count_rows(self):           # проверка количества строк и возврат длины(len)строк в числовом эквиваленте
         list_rows = self.elements_are_present(self.locators.FULL_PERSON_LIST)
         return len(list_rows)
@@ -181,6 +202,7 @@ class WebTablePage(BasePage):
 class ButtonsPage(BasePage):
     locators = ButtonsPageLocators()
 
+    @allure.step('click on different  buttons')
     def click_on_different_button(self, type_click):
         if type_click == 'double':  # условие "double" подставим как аргумент к методу в самом тесте
             # используя библиотеку ActionChains кликаем кнопку "Double click" по нахождению её локатора
@@ -198,6 +220,7 @@ class ButtonsPage(BasePage):
     # внутрення функция метода click_on_different_button
     # проверка клика на кнопку (RESULT_DOUBLE, RESULT_RIGHT, RESULT_CLICK_ME)
     # возвращает необходимый нам - текст локаторов, для assert в тесте
+    @allure.step('check clicked button')
     def check_clicked_on_the_button(self, element):
         return self.element_is_present(element).text
 
@@ -205,6 +228,7 @@ class ButtonsPage(BasePage):
 class LinksPage(BasePage):
     locators = LinksPageLocators()
 
+    @allure.step('check simple link')
     def check_new_tab_home_link(self):     # открытие по ссылке новой вкладки и return "локаторной" ссылки и current_url
         home_link = self.element_is_visible(self.locators.HOME_LINK)
         link_href = home_link.get_attribute('href')  # get_attribute возвращает значение указанного атрибута элемента
@@ -219,6 +243,7 @@ class LinksPage(BasePage):
         else:
             return link_href, request.status_code   # возврат линки и статус кода (если request.status_code != 200)
 
+    @allure.step('check broken link')
     def check_bad_link(self, url):                  # url из самого теста с (bad-request)
         request = requests.get(url)
         if request.status_code == 200:              # условие в if не отработает (ссылка с другим статус кодом)
@@ -226,6 +251,7 @@ class LinksPage(BasePage):
         else:
             return request.status_code              # условие else выполнится и вернёт статус код поломанной ссылки
 
+    @allure.step('check unauthorized link')
     def check_unauthorized_link(self, url):
         request = requests.get(url)
         if request.status_code == 200:
@@ -237,6 +263,7 @@ class LinksPage(BasePage):
 class UpLoadAndDownloadPage(BasePage):
     locators = UpLoadAndDownloadPageLocators()
 
+    @allure.step('upload file')
     def upload_file(self):                       # функция авто-загрузки файла (создание файла, написано в generator.py)
         file_name, path = generated_file()       # from generator.generator.py import generated_file() (не забыть)
         # указываем путь(path) к файлу в сам input
@@ -246,6 +273,7 @@ class UpLoadAndDownloadPage(BasePage):
         text = self.element_is_present(self.locators.UPLOADED_FILE_RESULT).text
         return file_name.split('\\')[-1], text.split('\\')[-1]
 
+    @allure.step('download file')
     def download_file(self):                        # функция для авто-загрузки файла
         # get_attribute возвращает значение указанного атрибута элемента (т.е. линку на файл картинки,
         # в котором зашифровано само изображение)
@@ -268,6 +296,7 @@ class UpLoadAndDownloadPage(BasePage):
 class DynamicPropertiesPage(BasePage):
     locators = DynamicPropertiesPageLocators()
 
+    @allure.step('check changed color of button')
     def check_changed_color(self):                  # возвращает цвета кнопки, до и после timeout web
         color_button = self.element_is_present(self.locators.COLOR_CHANGE_BUTTON)
         # метод value_of_css_property('color')  вернёт значение цвета (rgba)
@@ -276,6 +305,7 @@ class DynamicPropertiesPage(BasePage):
         color_button_after = color_button.value_of_css_property('color')
         return color_button_before, color_button_after
 
+    @allure.step('check appear of button')
     def check_appear_button(self):                  # проверка появления кнопки, после timeout web
         try:
             self.element_is_present(self.locators.VISIBLE_AFTER_5S_BUTTON)
@@ -283,6 +313,7 @@ class DynamicPropertiesPage(BasePage):
             return False
         return True
 
+    @allure.step('check enable button')
     def check_enable_button(self):                  # проверка кнопки, после timeout
         try:
             self.element_is_clickable(self.locators.ENABLE_BUTTON)
