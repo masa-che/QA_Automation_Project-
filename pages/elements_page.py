@@ -129,7 +129,7 @@ class WebTablePage(BasePage):
             age = person_info.age
             salary = person_info.salary
             department = person_info.department
-            self.element_is_visible(self.locators.ADD_BUTTON).click()                   # нажатие на кнопку ADD
+            self.element_is_visible(self.locators.ADD_BUTTON).click()               # нажатие на кнопку ADD
             # поиск локатора и добавление в него значение переменной firstname (и т.д.) сгенерированной пакетом faker
             self.element_is_visible(self.locators.FIRSTNAME_INPUT).send_keys(firstname)
             self.element_is_visible(self.locators.LASTNAME_INPUT).send_keys(lastname)
