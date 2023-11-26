@@ -10,7 +10,7 @@ from selenium.webdriver.chrome.options import Options
 @pytest.fixture(scope='function')                      # при помощи этой фикстуры, тест выполняется один раз для каждой функции
 def driver():
     options = Options()
-    options.add_experimental_option('excludeSwitches', ['enable-logging'])  #
+    options.add_experimental_option('excludeSwitches', ['enable-logging'])
     options.add_argument("user-data-dir=C:\\profile")  # создание временного профиля в браузере
     driver = webdriver.Chrome(options=options)         # запуск браузера с профилем add block
     options.add_argument('--headless')
