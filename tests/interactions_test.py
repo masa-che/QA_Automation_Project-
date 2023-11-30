@@ -128,3 +128,5 @@ class TestInteractions:
             time.sleep(3)
 
 
+# python -m pytest tests/interactions_test.py
+

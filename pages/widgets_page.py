@@ -1,3 +1,7 @@
+import random
+import time
+import allure
+
 from locators.widgets_page_locators import AccordionPageLocators, AutoCompletePegeLocators, DatePickerPageLocators, \
     SliderPageLocators, ProgressBarPageLocators, TabsPageLocators, ToolTipsPageLocators, MenuPageLocators, \
     SelectMenuPageLocators
@@ -8,14 +12,12 @@ from generator.generator import generated_color, generated_date, generated_selec
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import Select
 
-import random
-import time
-
 
 class AccordionPage(BasePage):
     locators = AccordionPageLocators()
 
     # метод прохода по всем вкладкам accordion widget и возврат текста заголовков, длин текс-контента
+    @allure.step('check accordian widget')
     def check_accordion(self, accordion_num):
         accordion = {'first': {'title': self.locators.SECTION_FIRST,
                                'content': self.locators.SECTION_CONTENT_FIRST},
@@ -38,6 +40,7 @@ class AccordionPage(BasePage):
 class AutoCompletePege(BasePage):
     locators = AutoCompletePegeLocators()
 
+    @allure.step('fill multi autocomplete input')
     def fill_input_multi(self):             # добавление значений в поле MULTI_INPUT
         # sample - можно вытягивать СПИСКОМ несколько УНИКАЛЬНЫХ значений из списка color_name,
         # (k - количество значений взятых из списка)
@@ -49,6 +52,7 @@ class AutoCompletePege(BasePage):
             input_multi.send_keys(Keys.ENTER)
         return colors
 
+    @allure.step('remove value from multi autocomplete')
     def remove_input_value(self):           # удаление значения в поле MULTI_VALUE
         # определяем длину списка до удаления значений в поле локатора MULTI_VALUE
         count_value_before = len(self.elements_are_visible(self.locators.MULTI_VALUE))
@@ -63,6 +67,7 @@ class AutoCompletePege(BasePage):
         count_value_after = len(self.elements_are_visible(self.locators.MULTI_VALUE))
         return count_value_before, count_value_after
 
+    @allure.step('check colors in multi autocomplete')
     def check_color_in_multi(self):         # сравнение цветов из генератора, с цветами в поле MULTI_VALUE
         colors_list = self.elements_are_visible(self.locators.MULTI_VALUE)
         colors = []
@@ -70,6 +75,7 @@ class AutoCompletePege(BasePage):
             colors.append(color.text)
         return colors
 
+    @allure.step('fill single autocomplete input')
     def fill_input_single(self):            # добавление значения в поле SINGLE_INPUT
         color = random.sample(next(generated_color()).color_name, k=1)
         input_single = self.element_is_visible(self.locators.SINGLE_INPUT)
@@ -78,6 +84,7 @@ class AutoCompletePege(BasePage):
         # Возвращаем из списка color элемент с нулевым индексом т.к. сравнивать будем с color.text (str)
         return color[0]
 
+    @allure.step('check color in single autocomplete')
     def check_color_in_single(self):        # сравнение цвета из генератора, с цветом в поле MULTI_VALUE
         color = self.element_is_visible(self.locators.SINGLE_VALUE)
         return color.text
@@ -86,6 +93,7 @@ class AutoCompletePege(BasePage):
 class DatePickerPage(BasePage):
     locators = DatePickerPageLocators()
 
+    @allure.step('change date')
     def select_date(self):                               # выбор даты
         date = next(generated_date())
         input_date = self.element_is_visible(self.locators.DATE_INPUT)
@@ -98,10 +106,12 @@ class DatePickerPage(BasePage):
         value_date_after = input_date.get_attribute('value')
         return value_date_before, value_date_after
 
+    @allure.step('select date by text')
     def set_date_by_text(self, element, value):           # выбор по select, element-css элемент и value из generator
         select = Select(self.element_is_present(element))
         select.select_by_visible_text(value)
 
+    @allure.step('select date item from list')
     def set_date_item_from_list(self, elements, value):   # выбор числа месяца(list)web, (if-первое вхождение и break)
         item_list = self.elements_are_present(elements)
         for item in item_list:
@@ -109,6 +119,7 @@ class DatePickerPage(BasePage):
                 item.click()
                 break
 
+    @allure.step('change select date and time')
     def select_date_and_time(self):                       # выбор даты и времени (без select)
         date = next(generated_date())
         input_date = self.element_is_visible(self.locators.DATE_AND_TIME_INPUT)
@@ -128,6 +139,7 @@ class DatePickerPage(BasePage):
 class SliderPage(BasePage):
     locators = SliderPageLocators()
 
+    @allure.step('change slider value')
     def change_slider_value(self):                        # метод по работе с slide элементом
         value_before = self.element_is_visible(self.locators.SLIDER_VALUE).get_attribute('value')
         slider_input = self.element_is_visible(self.locators.INPUT_SLIDER)
@@ -142,6 +154,7 @@ class SliderPage(BasePage):
 class ProgressBarPage(BasePage):
     locators = ProgressBarPageLocators()
 
+    @allure.step('change progress bar value')
     def change_progress_bar_value(self):                  # метод по работе с progress bar элементом
         value_before = self.element_is_present(self.locators.PROGRES_BAR_VALUE).text
         progress_bar_button = self.element_is_present(self.locators.PROGRESS_BAR_BUTTON)
@@ -155,6 +168,7 @@ class ProgressBarPage(BasePage):
 class TabsPage(BasePage):
     locators = TabsPageLocators()
 
+    @allure.step('check tabs')
     def check_tabs(self, tab_name):                       # метод по работе с вкладками (tabs)
 
         tabs = {'what':
@@ -181,6 +195,7 @@ class ToolTipsPage(BasePage):
     locators = ToolTipsPageLocators()
 
     # метод возврата текса из tool_tips
+    @allure.step('get text from tool tip')
     def get_text_from_tool_tips(self, hover_elem, wait_elem):
         element = self.element_is_present(hover_elem)
         self.action_move_to_element(element)
@@ -190,6 +205,7 @@ class ToolTipsPage(BasePage):
         text = tool_tip_text.text
         return text
 
+    @allure.step('check tool tip')
     def check_tool_tips(self):                              # метод проверки tool_tips на web (return текста tool_tips)
         tool_tip_text_button = self.get_text_from_tool_tips(self.locators.BUTTON, self.locators.TOOL_TIP_BUTTON)
         tool_tip_text_field = self.get_text_from_tool_tips(self.locators.FIELD, self.locators.TOOL_TIP_FIELD)
@@ -201,6 +217,7 @@ class ToolTipsPage(BasePage):
 class MenuPage(BasePage):
     locators = MenuPageLocators()
 
+    @allure.step('check menu item')
     def check_menu(self):                                  # метод проверки заголовков в меню (1локатор для 8 элементов)
         menu_items_list = self.elements_are_present(self.locators.MENU_ITEM_LIST)
         data = []
@@ -214,6 +231,7 @@ class MenuPage(BasePage):
 class SelectMenuPage(BasePage):
     locators = SelectMenuPageLocators()
 
+    @allure.step('check fill "select value" dropbox')
     def select_value(self):                                 # метод заполнения поля "Select Value"
         # генерация случайного значения из списка(list) указанных в bundle.js
         value = generated_select_value()
@@ -228,6 +246,7 @@ class SelectMenuPage(BasePage):
         select_value_after = self.element_is_present(self.locators.SELECT_VALUE_AFTER).text
         return select_value_before, select_value_after
 
+    @allure.step('check fill "select one" dropbox')
     def select_one(self):                                   # метод заполнения поля "Select One"
         value = generated_select_one()
         select_one_before = self.element_is_present(self.locators.SELECT_ONE_BEFORE).text
@@ -237,6 +256,7 @@ class SelectMenuPage(BasePage):
         select_one_after = self.element_is_present(self.locators.SELECT_VALUE_AFTER).text
         return select_one_before, select_one_after
 
+    @allure.step('check select in "Old Style Select Menu" dropbox')
     def select_color_old_style(self):                       # метод выбора цвета из "Old Style Select Menu"
         color = generated_colors_old_select()
         input_date = self.element_is_visible(self.locators.OLD_STYLE_SELECT)
@@ -250,10 +270,12 @@ class SelectMenuPage(BasePage):
         color_after = self.element_is_visible(self.locators.OLD_STYLE_SELECT).get_attribute('value')
         return color_before, color_after
 
+    @allure.step('select color by text from generator')
     def select_color_by_text(self, element, value):  # выбор по select, element-css элемент и value из generator
         select = Select(self.element_is_present(element))
         select.select_by_visible_text(value)
 
+    @allure.step('select color in "Multiselect drop down" dropbox')
     def select_color_in_multiselect(self):           # метод добавления цветов в dropdown "Multiselect drop down"
         # sample - можно вытягивать СПИСКОМ несколько УНИКАЛЬНЫХ значений из списка color_name,
         # (k - количество значений взятых из списка)
@@ -267,7 +289,8 @@ class SelectMenuPage(BasePage):
         # colors - list
         return colors
 
-    def check_color_in_multi(self):                  # метод для сравнения цветов из генератор,с цветами в "Multiselect drop down"
+    @allure.step('checking colors "Multiselect drop down" with colors from generator')
+    def check_color_in_multi(self):                  # метод для сравнения цветов из генератора, с цветами в "Multiselect drop down"
         colors_list = self.elements_are_visible(self.locators.MULTI_COLOR_VALUE)
         colors = []
         for color in colors_list:
@@ -275,6 +298,7 @@ class SelectMenuPage(BasePage):
         # colors - list
         return colors
 
+    @allure.step('checking remove colors in "Multiselect drop down"')
     def remove_color_in_multiselect(self):           # метод удаление значения в "Multiselect drop down"
         # определяем длину списка до удаления значений в поле локатора MULTI_COLOR_VALUE
         count_value_before = len(self.elements_are_visible(self.locators.MULTI_COLOR_VALUE))
@@ -290,6 +314,7 @@ class SelectMenuPage(BasePage):
         count_value_after = len(self.elements_are_visible(self.locators.MULTI_COLOR_VALUE))
         return count_value_before, count_value_after
 
+    @allure.step('multi select in "Standard multi select"')
     def select_standard_multi(self):                  # метод добавления авто в dropdown "Standard multi select"
         car_before = self.element_is_visible(self.locators.MULTI_STANDARD_SELECT).get_attribute('value')
         select_multi = Select(self.element_is_present(self.locators.MULTI_STANDARD_SELECT))

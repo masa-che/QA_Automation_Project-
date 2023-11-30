@@ -8,7 +8,7 @@ from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebT
 
 @allure.suite("Elements")                               # указываем что это набор тестов (suite) и имя "Elements"
 class TestElements:
-    @allure.feature("Text Box")                         # указываем что тесты с "характерной чертой" (feature)
+    @allure.feature("Text Box")                         # указываем что тесты с "характерной чертой"особенностью (feature)
     class TestTextBox:
         @allure.title("Check Text Box")                 # указываем что делает тест(title)
         def test_text_box(self, driver):
